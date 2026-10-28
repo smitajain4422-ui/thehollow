@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Hollow Countdown – Roblox Halloween 2026 | Days Until October 31</title>
+<meta name="description" content="Live countdown to October 31 for The Hollow, Roblox's Halloween 2026 event. See how many days, hours, minutes and seconds are left. Fan-made and unofficial.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://thehollow.gifts/">
+<meta name="theme-color" content="#06081a">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2306081a'/%3E%3Ccircle cx='32' cy='42' r='26' fill='%23c8120f' opacity='.6'/%3E%3Cellipse cx='21' cy='30' rx='8' ry='3.6' fill='%23f4cf7a' transform='rotate(14 21 30)'/%3E%3Cellipse cx='43' cy='30' rx='8' ry='3.6' fill='%23f4cf7a' transform='rotate(-14 43 30)'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Hollow Countdown">
+<meta property="og:title" content="The Hollow Countdown – Roblox Halloween 2026">
+<meta property="og:description" content="How long until October 31? A spooky live countdown for Roblox's The Hollow event. Don't go in.">
+<meta property="og:url" content="https://thehollow.gifts/">
+<meta property="og:image" content="https://thehollow.gifts/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Hollow countdown to October 31 over a red-lit dead forest">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Hollow Countdown – Roblox Halloween 2026">
+<meta name="twitter:description" content="How long until October 31? A spooky live countdown for Roblox's The Hollow event.">
+<meta name="twitter:image" content="https://thehollow.gifts/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "The Hollow Countdown",
+  "description": "Live countdown to October 31 for The Hollow, Roblox's Halloween 2026 event. Fan-made and unofficial.",
+  "url": "https://thehollow.gifts/",
+  "inLanguage": "en",
+  "about": { "@type": "Thing", "name": "The Hollow (Roblox Halloween 2026 event)" }
+}
+</script>
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); } body { margin: 0; } [hidden] { display: none !important; }</style><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@600;800&family=Grenze:wght@600;800&family=Special+Elite&display=swap">
+<style>
+/* Layout: one screen. A red-lit clearing in a dead wood; the clock and the door are the only things in it. */
+:root {
+  --blood: #c8120f;
+  --ember: #ff3b1f;
+  --abyss: #06081a;
+  --navy: #131c42;
+  --bone: #efe3c6;
+  --ash: #b4a79c;
+  --faint: rgba(239, 227, 198, .42);
+  --ink: #07050a;
+  --spirit: #7fb2ff;
+
+  /* these shift when you go inside */
+  --glow: var(--ember);
+  --digit: var(--bone);
+  --eye: #f4cf7a;
+  --eye-glow: rgba(244, 207, 122, .55);
+  --rim: rgba(214, 22, 16, .62);
+
+  --font-display: "Grenze Gotisch", "UnifrakturCook", "Old English Text MT", Georgia, serif;
+  --font-num: "Grenze", Georgia, "Times New Roman", serif;
+  --font-type: "Special Elite", "Courier New", Courier, monospace;
+  color-scheme: dark;
+}
+html.inside {
+  --glow: var(--spirit);
+  --digit: #ff4a2e;
+  --eye: #ff3324;
+  --eye-glow: rgba(255, 51, 36, .62);
+  --rim: rgba(110, 160, 255, .55);
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--abyss);
+  color: var(--bone);
+  font: 16px/1.5 var(--font-type);
+  overflow-x: hidden;
+}
+::selection { background: var(--blood); color: var(--bone); }
+html.grabbed, html.grabbed * { cursor: none !important; }
+
+/* ---------- atmosphere ---------- */
+.sky, .fog, .woods, .vignette, .grain, .blackout, #reach { position: fixed; pointer-events: none; }
+.sky { inset: 0; z-index: 0; transition: opacity 1.2s ease; }
+.sky--red {
+  background: radial-gradient(ellipse 85% 62% at 50% 64%, #e0190f 0%, #a10d0c 26%, #4a0911 52%, #12071a 78%, var(--abyss) 100%);
+  animation: flicker 9s steps(1) infinite;
+}
+.sky--cold {
+  background: radial-gradient(ellipse 75% 58% at 50% 66%, #233a8f 0%, #101b4e 34%, #070b24 64%, #030410 100%);
+  opacity: 0;
+}
+html.inside .sky--red { opacity: 0; }
+html.inside .sky--cold { opacity: 1; }
+
+.fog {
+  left: -50%; right: -50%; bottom: 8vh; height: 60vh; z-index: 1;
+  background:
+    radial-gradient(ellipse 30% 40% at 30% 60%, rgba(255, 214, 200, .10), transparent 70%),
+    radial-gradient(ellipse 26% 34% at 72% 55%, rgba(255, 214, 200, .08), transparent 70%);
+  animation: drift 48s ease-in-out infinite alternate;
+}
+.fog--low { bottom: 0; height: 42vh; opacity: .85; animation-duration: 63s; animation-direction: alternate-reverse; }
+
+.woods { left: 0; right: 0; bottom: 0; height: clamp(170px, 38vh, 400px); z-index: 1; }
+.woods canvas { display: block; width: 100%; height: 100%; }
+.eyes {
+  position: absolute; left: var(--x); top: var(--y);
+  display: flex; gap: 7px;
+  transform: translate(-50%, -50%) scale(var(--s));
+  opacity: 0; transition: opacity .9s ease var(--delay);
+}
+.eyes.on, html.inside .eyes { opacity: 1; }
+.eye {
+  display: block; width: 7px; height: 3.6px; border-radius: 50%;
+  background: var(--eye); box-shadow: 0 0 6px 1.5px var(--eye-glow);
+  animation: blink var(--blink) var(--bd) infinite;
+}
+.eye:first-child { rotate: 14deg; }
+.eye:last-child { rotate: -14deg; }
+
+.vignette { inset: 0; z-index: 4; background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 55%, rgba(0, 0, 0, .7) 100%); }
+.grain {
+  inset: 0; z-index: 6; opacity: .16; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.blackout { inset: 0; z-index: 20; background: #000; opacity: 0; }
+.blackout.run { animation: blackout .95s linear; }
+
+/* ---------- the clearing ---------- */
+.stage {
+  position: relative; z-index: 2;
+  box-sizing: border-box; min-height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(1.4rem, 4.5vh, 3rem);
+  text-align: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: clamp(2rem, 7vh, 4rem) clamp(4.5rem, 20vh, 12rem);
+}
+
+.title {
+  margin: 0;
+  display: flex; flex-direction: column; align-items: center;
+  font-family: var(--font-display); font-weight: 800; line-height: .82;
+  color: var(--bone);
+  text-shadow: 0 0 26px color-mix(in srgb, var(--glow) 55%, transparent), 0 3px 0 rgba(30, 3, 8, .9);
+  transition: text-shadow 1.2s ease;
+}
+.the { font-family: var(--font-num); font-size: clamp(1rem, 2.6vw, 1.5rem); letter-spacing: .5em; padding-left: .5em; text-transform: uppercase; }
+.hollow { font-size: clamp(3.8rem, 15vw, 9rem); letter-spacing: .01em; text-wrap: balance; }
+
+.count { display: flex; flex-direction: column; align-items: center; gap: .9rem; }
+.clock { display: flex; align-items: flex-start; justify-content: center; gap: clamp(.2rem, 1.4vw, .9rem); }
+.unit { display: flex; flex-direction: column; align-items: center; gap: .45rem; }
+.num {
+  min-width: 1.25em;
+  font: 800 clamp(2.8rem, 12vw, 7.5rem)/.9 var(--font-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--digit);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--glow) 45%, transparent), 0 3px 0 rgba(0, 0, 0, .6);
+  transition: color 1.2s ease, text-shadow 1.2s ease;
+}
+.sep { font: 600 clamp(2rem, 8vw, 5rem)/1 var(--font-num); color: var(--faint); padding-top: .06em; }
+.lbl { font: .78rem/1 var(--font-type); letter-spacing: .2em; color: var(--ash); }
+.until { margin: 0; font: clamp(.95rem, 2vw, 1.15rem)/1.4 var(--font-type); letter-spacing: .14em; color: var(--bone); opacity: .85; }
+html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
+
+.door-wrap { display: flex; flex-direction: column; align-items: center; gap: .9rem; }
+.door {
+  position: relative; isolation: isolate;
+  padding: 1.05em 2.3em 1.1em;
+  border: 0; border-radius: 999px;
+  font: 700 clamp(1.15rem, 2.4vw, 1.4rem)/1 var(--font-num);
+  letter-spacing: .02em;
+  color: var(--bone);
+  background:
+    radial-gradient(120% 140% at 28% 0%, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, 0) 40%),
+    linear-gradient(180deg, #1f1d24 0%, #060508 58%, #000 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .2),
+    inset 0 -7px 14px rgba(0, 0, 0, .85),
+    0 0 0 1px rgba(0, 0, 0, .9),
+    0 12px 26px rgba(0, 0, 0, .6),
+    0 0 34px color-mix(in srgb, var(--glow) 30%, transparent);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow .3s ease, transform .15s ease;
+}
+.door::before {
+  content: ""; position: absolute; z-index: -1;
+  left: 7%; top: 13%; width: 20%; height: 52%;
+  border-radius: 999px 45% 45% 999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, 0) 72%);
+}
+.door::after {
+  content: ""; position: absolute; z-index: -1;
+  left: 16%; right: 16%; top: 3px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .38), transparent);
+}
+.door:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .2),
+    inset 0 -7px 14px rgba(0, 0, 0, .85),
+    0 0 0 1px rgba(0, 0, 0, .9),
+    0 12px 26px rgba(0, 0, 0, .6),
+    0 0 52px color-mix(in srgb, var(--glow) 60%, transparent);
+}
+.door:active { transform: translateY(1px) scale(.985); }
+.door:focus-visible { outline: 2px solid var(--bone); outline-offset: 5px; }
+
+.whisper {
+  margin: 0; min-height: 1.4em;
+  font: 1rem/1.4 var(--font-type); letter-spacing: .08em;
+  color: var(--digit);
+  transition: color 1.2s ease;
+}
+
+
+/* ---------- the arm ---------- */
+#reach { inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; }
+.rim, .ink, .shine, .drip, .crease { fill: none; stroke-linecap: round; }
+.rim { stroke: var(--rim); transition: stroke 1.2s ease; }
+.ink, .drip { stroke: var(--ink); }
+.shine { stroke: rgba(239, 227, 198, .42); transform: translate(-.7px, -.8px); }
+#goo circle { fill: var(--ink); }
+.glove { fill: var(--bone); stroke: var(--ink); stroke-width: 2.4; stroke-linejoin: round; }
+.crease { stroke: var(--ink); stroke-width: 1.6; }
+.bones { fill: none; stroke: var(--ink); stroke-width: 1.25; stroke-linecap: round; opacity: .72; }
+.bones circle { fill: var(--ink); stroke: none; }
+
+@keyframes flicker {
+  0%, 100% { filter: none; }
+  61% { filter: brightness(.7); }
+  62% { filter: none; }
+  64% { filter: brightness(.55); }
+  65% { filter: none; }
+  88% { filter: brightness(.82); }
+  89% { filter: none; }
+}
+@keyframes drift { from { transform: translateX(-8%); } to { transform: translateX(8%); } }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 96.5% { transform: scaleY(.08); } }
+@keyframes blackout {
+  0% { opacity: 0; } 8% { opacity: .95; } 14% { opacity: .15; } 22% { opacity: 1; }
+  68% { opacity: 1; } 100% { opacity: 0; }
+}
+@keyframes throb { 50% { opacity: .55; } }
+
+@media (max-width: 420px) {
+  .lbl { font-size: .6rem; letter-spacing: .12em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sky--red, .fog, .eye, html.arrived .num { animation: none; }
+  .blackout.run { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="sky sky--red"></div>
+<div class="sky sky--cold"></div>
+<div class="fog"></div>
+<div class="fog fog--low"></div>
+<div class="woods" aria-hidden="true"><canvas id="woods"></canvas></div>
+<div class="vignette"></div>
+
+<main class="stage">
+  <h1 class="title"><span class="the">The</span> <span class="hollow">Hollow</span></h1>
+
+  <section class="count" aria-label="Countdown to October 31">
+    <div class="clock" role="timer">
+      <div class="unit"><span class="num" id="d">00</span><span class="lbl">days</span></div>
+      <span class="sep" aria-hidden="true">:</span>
+      <div class="unit"><span class="num" id="h">00</span><span class="lbl">hours</span></div>
+      <span class="sep" aria-hidden="true">:</span>
+      <div class="unit"><span class="num" id="m">00</span><span class="lbl">minutes</span></div>
+      <span class="sep" aria-hidden="true">:</span>
+      <div class="unit"><span class="num" id="s">00</span><span class="lbl">seconds</span></div>
+    </div>
+    <p class="until" id="until">until October 31</p>
+  </section>
+
+  <div class="door-wrap">
+    <button class="door" id="door" type="button"><span id="doorLabel">don’t go in</span></button>
+    <p class="whisper" id="whisper" aria-live="polite"></p>
+  </div>
+</main>
+
+
+<svg id="reach" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="gooey" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3.5"/>
+      <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"/>
+    </filter>
+    <filter id="handShade" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="6" stdDeviation="4" flood-color="#000" flood-opacity=".6"/>
+    </filter>
+  </defs>
+  <g id="arm" style="visibility:hidden">
+    <g id="rims"></g>
+    <g id="goo" filter="url(#gooey)"></g>
+    <g id="drips"></g>
+    <g id="inks"></g>
+    <g id="shines"></g>
+  </g>
+  <g id="handWrap" filter="url(#handShade)" style="visibility:hidden">
+    <g id="handT">
+      <path class="glove" d="M-6.5 36L-6.5 6.5A6.5 6.5 0 0 1 6.5 6.5L6.5 25C7 18.5 16.5 18.5 17 25.5C17.5 20.5 26 20.5 26.5 28C27 24 34 24.5 34 31.5L33.6 46C33.2 52 30.5 56 27.5 58.5L-2 58.5C-7 56 -13.5 50.5 -17 44C-19.5 39 -16 33.5 -11.5 35.5C-9.5 36.3 -8 37 -6.5 37.5Z"/>
+      <path class="crease" d="M-6.5 37.5C-6 42 -5 46 -3 49M17 25.5L17 31M26.5 28L26.3 33.5"/>
+      <g class="bones">
+        <path d="M0 4.5L0 10.8M0 13.6L0 21M.3 23.6L1 33M1.6 36L7 53M11.8 26.5L11.8 31M12 34L12.8 53M21.6 28.6L21.4 33M21.2 36L18 53M30.4 31.6L30 35.6M29.6 38.6L23 53M-13.5 41.5L-9.5 45M-7.5 47L2 54"/>
+        <circle cx="0" cy="12.2" r="1.1"/><circle cx="0" cy="22.3" r="1.1"/><circle cx="11.8" cy="32.6" r="1"/>
+        <circle cx="21.3" cy="34.6" r="1"/><circle cx="29.8" cy="37.1" r="1"/><circle cx="-8.5" cy="46" r="1"/>
+      </g>
+      <rect class="glove" x="-4.5" y="56.5" width="36" height="12.5" rx="3.5"/>
+      <path class="crease" d="M-2.5 61H29.5"/>
+    </g>
+  </g>
+</svg>
+
+<div class="grain"></div>
+<div class="blackout" id="blackout"></div>
+
+<script>
+(() => {
+  const $ = (q) => document.querySelector(q);
+  const root = document.documentElement;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ---------- countdown ---------- */
+  const out = { d: $('#d'), h: $('#h'), m: $('#m'), s: $('#s') };
+  const untilEl = $('#until');
+  const pad = (n) => String(n).padStart(2, '0');
+
+  function nextOct31(now) {
+    const t = new Date(now.getFullYear(), 9, 31);
+    return now < t ? t : new Date(now.getFullYear() + 1, 9, 31);
+  }
+  function tick() {
+    const now = new Date();
+    const arrived = now.getMonth() === 9 && now.getDate() === 31;
+    const left = arrived ? 0 : Math.ceil((nextOct31(now) - now) / 1000);
+    const parts = {
+      d: Math.floor(left / 86400),
+      h: Math.floor(left % 86400 / 3600),
+      m: Math.floor(left % 3600 / 60),
+      s: left % 60,
+    };
+    for (const k in parts) {
+      const v = pad(parts[k]);
+      if (out[k].textContent !== v) out[k].textContent = v;
+    }
+    root.classList.toggle('arrived', arrived);
+    const label = arrived ? 'It’s October 31.' : 'until October 31';
+    if (untilEl.textContent !== label) untilEl.textContent = label;
+    setTimeout(tick, 1000 - (Date.now() % 1000) + 8);
+  }
+  tick();
+
+  /* ---------- the woods ---------- */
+  function rng(seed) {
+    return () => {
+      seed = seed + 0x6D2B79F5 | 0;
+      let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  const canvas = $('#woods');
+  function branch(g, r, x, y, a, len, w, depth) {
+    const x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len;
+    const bend = (r() - .5) * len * .35;
+    g.lineWidth = w;
+    g.beginPath();
+    g.moveTo(x, y);
+    g.quadraticCurveTo((x + x2) / 2 - Math.sin(a) * bend, (y + y2) / 2 + Math.cos(a) * bend, x2, y2);
+    g.stroke();
+    if (depth <= 0 || w < .45) return;
+    const kids = depth > 4 ? 2 : (r() < .5 ? 2 : 3);
+    for (let k = 0; k < kids; k++) {
+      const na = a + (k - (kids - 1) / 2) * (.5 + r() * .4) + (r() - .5) * .3;
+      branch(g, r, x2, y2, na, len * (.62 + r() * .18), w * .66, depth - 1);
+    }
+  }
+  function layer(g, r, w, h, o) {
+    g.fillStyle = g.strokeStyle = o.color;
+    g.lineCap = 'round';
+    g.beginPath();
+    g.moveTo(0, h);
+    for (let x = 0; x <= w + 20; x += 20) g.lineTo(x, o.base + Math.sin(x * .012) * 6 + r() * 4);
+    g.lineTo(w + 20, h);
+    g.closePath();
+    g.fill();
+    for (let i = 0; i < o.count; i++) {
+      const x = (i + .2 + r() * .6) * (w / o.count);
+      const th = h * (o.lo + r() * (o.hi - o.lo));
+      branch(g, r, x, o.base + 4, -Math.PI / 2 + (r() - .5) * .22, th * .3, o.width * (.7 + r() * .6), o.depth);
+    }
+  }
+  function drawWoods() {
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    const g = canvas.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, w, h);
+    const r = rng(31);
+    layer(g, r, w, h, { color: 'rgba(19, 28, 66, .88)', base: h * .8, count: Math.ceil(w / 46), lo: .3, hi: .62, width: 2.2, depth: 5 });
+    const mist = g.createLinearGradient(0, h * .5, 0, h);
+    mist.addColorStop(0, 'rgba(60, 8, 20, 0)');
+    mist.addColorStop(1, 'rgba(40, 6, 18, .55)');
+    g.fillStyle = mist;
+    g.fillRect(0, 0, w, h);
+    layer(g, r, w, h, { color: '#04050c', base: h * .92, count: Math.ceil(w / 120) + 2, lo: .5, hi: 1, width: 5, depth: 6 });
+  }
+  drawWoods();
+  let resizeTimer;
+  addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawWoods, 150); });
+
+  const woods = $('.woods');
+  const er = rng(1031);
+  for (let i = 0; i < 12; i++) {
+    const e = document.createElement('div');
+    e.className = 'eyes' + (i < 2 ? ' on' : '');
+    const x = i === 0 ? 14 : i === 1 ? 84 : 4 + er() * 92;
+    e.style.cssText = `--x:${x}%;--y:${52 + er() * 34}%;--s:${(.7 + er() * .8).toFixed(2)};` +
+      `--bd:${(er() * 6).toFixed(2)}s;--blink:${(4 + er() * 5).toFixed(2)}s;--delay:${(i * .12).toFixed(2)}s`;
+    e.innerHTML = '<i class="eye"></i><i class="eye"></i>';
+    woods.appendChild(e);
+  }
+
+  /* ---------- the door ---------- */
+  const door = $('#door'), doorLabel = $('#doorLabel'), whisper = $('#whisper'), blackout = $('#blackout');
+  function setInside(on) {
+    root.classList.toggle('inside', on);
+    doorLabel.textContent = on ? 'get out' : 'don’t go in';
+    whisper.textContent = on ? 'you went in anyway.' : 'you got out. this time.';
+  }
+  door.addEventListener('click', () => {
+    const goingIn = !root.classList.contains('inside');
+    mode = 'yank';
+    until = performance.now() + 700;
+    if (reduce.matches) { setInside(goingIn); return; }
+    blackout.classList.remove('run');
+    void blackout.offsetWidth;
+    blackout.classList.add('run');
+    setTimeout(() => setInside(goingIn), 260);
+  });
+  door.addEventListener('focus', () => {
+    if (door.matches(':focus-visible')) nextPeek = 0;
+  });
+
+  /* ---------- the arm ---------- */
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (parent, tag, cls) => {
+    const el = document.createElementNS(NS, tag);
+    if (cls) el.setAttribute('class', cls);
+    parent.appendChild(el);
+    return el;
+  };
+  const WID = [6, 4, 7.5, 3, 5.4, 3.6, 2.4, 6.5];
+  const N = WID.length, MID = (N - 1) / 2;
+  const rims = WID.map(() => mk($('#rims'), 'path', 'rim'));
+  const inks = WID.map(() => mk($('#inks'), 'path', 'ink'));
+  const shines = WID.map(() => mk($('#shines'), 'path', 'shine'));
+  const DRIP = [-.9, -.6, -.3, .35, .65, .95];
+  const drips = DRIP.map(() => mk($('#drips'), 'path', 'drip'));
+  const blobs = [0, 1, 2, 3, 4].map(() => mk($('#goo'), 'circle'));
+  const armG = $('#arm'), handWrap = $('#handWrap'), handT = $('#handT');
+
+  // the glove is drawn pointing up with the fingertip at 0,0; the arm plugs into its cuff
+  const WRIST = { x: 13.5, y: 64 };
+  const ALPHA = Math.atan2(-WRIST.y, -WRIST.x);
+
+  const P = { x: 0, y: 0, active: false, down: false, type: 'mouse' };
+  const F = { x: 0, y: 0 }, V = { x: 0, y: 0 };
+  let aim = null, nrm = { x: 0, y: 1 }, theta = Math.PI / 2;
+  let mode = 'rest', until = 0, peekDir = null, peekAt = 0;
+  let nextPeek = performance.now() + 2500;
+  let shown = false, pressed = false, t = 0, last = performance.now();
+
+  const smooth = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+  const f1 = (n) => n.toFixed(1);
+
+  function shape() {
+    const r = door.getBoundingClientRect();
+    const rad = r.height / 2;
+    return { x0: r.left + rad, x1: r.right - rad, cy: r.top + rad, r: rad, cx: (r.left + r.right) / 2, hw: r.width / 2 };
+  }
+  function nearest(p, s) {
+    const qx = Math.min(s.x1, Math.max(s.x0, p.x));
+    const dx = p.x - qx, dy = p.y - s.cy, d = Math.hypot(dx, dy);
+    return { qx, d: d - s.r, n: d > .001 ? { x: dx / d, y: dy / d } : null };
+  }
+  const reachR = () => Math.max(140, Math.min(320, Math.min(innerWidth, innerHeight) * .4));
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min(.05, (now - last) / 1000);
+    last = now;
+    t += dt;
+    const s = shape();
+    const R = reachR();
+    const near = P.active ? nearest(P, s).d : Infinity;
+
+    if (mode === 'yank' && now > until) mode = 'rest';
+    if (mode === 'peek' && (now > until || near < R)) mode = 'rest';
+    if (mode !== 'yank') {
+      if (near < (mode === 'reach' ? R + 36 : R)) mode = 'reach';
+      else if (mode === 'reach') mode = 'rest';
+    }
+    if (mode === 'rest' && !shown && !reduce.matches && now > nextPeek && near > R + 80 && document.visibilityState === 'visible') {
+      const opts = [[-.6, .8], [.62, .78], [-.97, .25], [.96, .28]];
+      const o = opts[Math.floor(Math.random() * opts.length)];
+      peekDir = { x: o[0], y: o[1] };
+      peekAt = now;
+      mode = 'peek';
+      until = now + 2100;
+    }
+    root.classList.toggle('grabbed', mode === 'reach' && P.type !== 'touch');
+
+    let T = null;
+    if (mode === 'reach') T = { x: P.x, y: P.y };
+    else if (mode === 'peek') {
+      const k = (now - peekAt) / 1000;
+      const reach = 64 + 18 * Math.sin(Math.min(1, k) * Math.PI / 2);
+      const wave = Math.sin(k * 7) * 7;
+      const bx = s.cx + peekDir.x * s.hw, by = s.cy + peekDir.y * s.r;
+      T = { x: bx + peekDir.x * reach - peekDir.y * wave, y: by + peekDir.y * reach + peekDir.x * wave };
+    }
+
+    // where the arm comes out slides along the button's edge toward whatever it wants
+    const goalAim = T || aim || { x: s.cx - s.hw * .4, y: s.cy + 80 };
+    if (!aim) aim = { x: goalAim.x, y: goalAim.y };
+    const ka = 1 - Math.exp(-dt * 8);
+    aim.x += (goalAim.x - aim.x) * ka;
+    aim.y += (goalAim.y - aim.y) * ka;
+    const na = nearest(aim, s);
+    if (na.n && na.d > 4) nrm = na.n;
+    const A = { x: na.qx + nrm.x * s.r, y: s.cy + nrm.y * s.r };
+
+    if (!shown && mode === 'rest') { F.x = A.x; F.y = A.y; V.x = V.y = 0; }
+    const goal = T || A;
+    const [k, c] = mode === 'reach' ? [720, 50] : mode === 'yank' ? [1000, 63] : mode === 'peek' ? [110, 14] : [150, 20];
+    for (let rem = dt; rem > 0; rem -= .008) {
+      const h = Math.min(rem, .008);
+      V.x += (k * (goal.x - F.x) - c * V.x) * h;
+      V.y += (k * (goal.y - F.y) - c * V.y) * h;
+      F.x += V.x * h;
+      F.y += V.y * h;
+    }
+    let L = Math.hypot(F.x - A.x, F.y - A.y);
+    const maxL = R + 110;
+    if (L > maxL) {
+      F.x = A.x + (F.x - A.x) / L * maxL;
+      F.y = A.y + (F.y - A.y) / L * maxL;
+      L = maxL;
+    }
+
+    const visible = !(mode === 'rest' && L < 3 && Math.hypot(V.x, V.y) < 40);
+    if (visible !== shown) {
+      shown = visible;
+      armG.style.visibility = handWrap.style.visibility = visible ? 'visible' : 'hidden';
+      if (!visible) nextPeek = now + 6000 + Math.random() * 6000;
+    }
+    if (shown) draw(A, L, s, dt);
+  }
+
+  function draw(A, L, s, dt) {
+    const e = smooth(L / 46);
+    const bs = innerWidth < 600 ? .9 : 1.3;
+    const wob = reduce.matches ? 0 : 1;
+
+    const ox = F.x - (A.x + nrm.x * L * .3), oy = F.y - (A.y + nrm.y * L * .3);
+    const want = L < 14 ? Math.atan2(nrm.y, nrm.x) : Math.atan2(oy, ox);
+    const diff = Math.atan2(Math.sin(want - theta), Math.cos(want - theta));
+    theta += diff * (1 - Math.exp(-dt * 14));
+
+    const hs = bs * (.3 + .7 * e) * (pressed && mode === 'reach' ? .86 : 1);
+    const phi = theta - ALPHA, cp = Math.cos(phi), sp = Math.sin(phi);
+    const toWorld = (lx, ly) => ({ x: F.x + (lx * cp - ly * sp) * hs, y: F.y + (lx * sp + ly * cp) * hs });
+    handT.setAttribute('transform', `translate(${f1(F.x)} ${f1(F.y)}) rotate(${(phi * 180 / Math.PI).toFixed(2)}) scale(${hs.toFixed(3)})`);
+
+    const hd = { x: Math.cos(theta), y: Math.sin(theta) };
+    const tA = { x: -nrm.y, y: nrm.x };
+    const spread = Math.min(s.r * 1.25, 40) * (.45 + .55 * e) * bs;
+    const sag = L * .06;
+    for (let i = 0; i < N; i++) {
+      const f = i / (N - 1) - .5;
+      const b = { x: A.x - nrm.x * 3 + tA.x * f * spread, y: A.y - nrm.y * 3 + tA.y * f * spread };
+      const end = toWorld(WRIST.x + f * 22, WRIST.y);
+      const w1 = Math.sin(t * 2.1 + i * .9) * (2 + L * .03) * wob + (i - MID) * L * .018;
+      const w2 = Math.sin(t * 1.7 + i * 1.9 + 1.3) * (2 + L * .035) * wob + (MID - i) * L * .022;
+      const p1x = b.x + nrm.x * L * .36 + tA.x * w1, p1y = b.y + nrm.y * L * .36 + tA.y * w1 + sag;
+      const p2x = end.x - hd.x * L * .34 - hd.y * w2, p2y = end.y - hd.y * L * .34 + hd.x * w2 + sag;
+      const d = `M${f1(b.x)} ${f1(b.y)}C${f1(p1x)} ${f1(p1y)} ${f1(p2x)} ${f1(p2y)} ${f1(end.x)} ${f1(end.y)}`;
+      const w = WID[i] * bs * (.55 + .45 * e) * (1 + .08 * Math.sin(t * 3 + i) * wob);
+      rims[i].setAttribute('d', d);
+      rims[i].setAttribute('stroke-width', (w + 4).toFixed(2));
+      inks[i].setAttribute('d', d);
+      inks[i].setAttribute('stroke-width', w.toFixed(2));
+      shines[i].setAttribute('d', d);
+      shines[i].setAttribute('stroke-width', Math.max(.6, w * .3).toFixed(2));
+    }
+
+    // tar pooling where it pushes out of the button
+    const gb = [[-2, 0, 8 + 8 * e], [6 * e, 0, 5 + 4 * e], [13 * e, 0, 4 * e], [2, .42, 4.2 * e], [2, -.42, 4.2 * e]];
+    blobs.forEach((c, j) => {
+      const [along, side, r] = gb[j];
+      c.setAttribute('cx', f1(A.x + nrm.x * along + tA.x * side * spread));
+      c.setAttribute('cy', f1(A.y + nrm.y * along + tA.y * side * spread));
+      c.setAttribute('r', f1(Math.max(0, r * bs)));
+    });
+    DRIP.forEach((off, j) => {
+      const sx = A.x + tA.x * off * spread * .9 - nrm.x, sy = A.y + tA.y * off * spread * .9 - nrm.y;
+      const len = (7 + (j * 7) % 11) * e * bs * (1 + .18 * Math.sin(t * 2.6 + j * 1.7) * wob);
+      const cx = sx + nrm.x * len * .75, cy = sy + nrm.y * len * .75;
+      const ex = sx + nrm.x * len * .55 + tA.x * off * len * .35, ey = sy + nrm.y * len * .55 + len * .75 + tA.y * off * len * .35;
+      drips[j].setAttribute('d', `M${f1(sx)} ${f1(sy)}Q${f1(cx)} ${f1(cy)} ${f1(ex)} ${f1(ey)}`);
+      drips[j].setAttribute('stroke-width', ((1.1 + (j % 3) * .45) * bs).toFixed(2));
+    });
+  }
+
+  // mouse and pen use pointer events; fingers use touch events, which keep coming while the page scrolls
+  const track = (x, y, type) => { P.x = x; P.y = y; P.type = type; };
+  addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'touch') return;
+    track(e.clientX, e.clientY, e.pointerType);
+    P.active = true;
+  }, { passive: true });
+  addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') return;
+    track(e.clientX, e.clientY, e.pointerType);
+    P.active = pressed = true;
+  });
+  addEventListener('pointerup', () => { pressed = false; });
+  addEventListener('pointercancel', () => { pressed = false; });
+  addEventListener('pointerout', (e) => { if (!e.relatedTarget && e.pointerType !== 'touch') P.active = false; });
+  const finger = (e) => {
+    const f = e.touches[0];
+    if (f) { track(f.clientX, f.clientY, 'touch'); P.down = P.active = true; }
+  };
+  addEventListener('touchstart', finger, { passive: true });
+  addEventListener('touchmove', finger, { passive: true });
+  const lift = (e) => {
+    if (e.touches.length) return;
+    P.down = false;
+    setTimeout(() => { if (!P.down && P.type === 'touch') P.active = false; }, 350);
+  };
+  addEventListener('touchend', lift, { passive: true });
+  addEventListener('touchcancel', lift, { passive: true });
+  addEventListener('blur', () => { P.active = P.down = pressed = false; });
+
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
+
