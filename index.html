@@ -660,35 +660,6 @@ html.entered .stage { padding-block: clamp(3.5rem, 8vh, 5rem) clamp(5rem, 16vh, 
 }
 @media (prefers-reduced-motion: reduce) { .step > *, .step > .g-h, .photo, .r-art.big::before { animation: none; } }
 
-/* flashlight: once inside, the forest goes dark except where the pointer shines; eyes caught in the light shut */
-.dark {
-  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 1.4s ease;
-  background: radial-gradient(circle at var(--lx, 50%) var(--ly, 40%), transparent 0, transparent 80px,
-    rgba(3, 3, 10, .6) 170px, rgba(3, 3, 10, .93) 340px);
-}
-html.entered .dark { opacity: 1; }
-.eyes.lit .eye { animation: none; transform: scaleY(.1); transition: transform .08s ease; }
-
-/* big headings are split into letters that shy away from the pointer */
-.g-h .w { display: inline-block; white-space: nowrap; }
-.g-h .ch { display: inline-block; }
-
-/* press and hold a reward to choose it */
-.reward { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
-.reward .r-art::before {
-  content: ""; position: absolute; left: 50%; top: 50%; width: 92%; aspect-ratio: 1; transform: translate(-50%, -50%);
-  border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity .25s ease;
-  background: conic-gradient(#c8120f calc(var(--hold, 0) * 360deg), rgba(239, 227, 198, .14) 0);
-  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
-  mask: radial-gradient(closest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
-}
-.reward:hover .r-art::before, .reward.holding .r-art::before { opacity: 1; }
-.reward.holding .r-bob { animation: shake .08s linear infinite; }
-@keyframes shake { 25% { transform: translate(-3px, 1px) rotate(-3deg); } 75% { transform: translate(3px, -1px) rotate(3deg); } }
-.r-hold { font: 1rem/1 var(--font-type); color: var(--ash); }
-.reward.holding .r-hold { color: var(--bone); }
-@media (prefers-reduced-motion: reduce) { .dark { display: none; } .reward.holding .r-bob { animation: none; } }
-
 /* ---------- the arm ---------- */
 #reach { inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; }
 .rim, .ink, .shine, .drip, .crease { fill: none; stroke-linecap: round; }
@@ -732,7 +703,6 @@ html.entered .dark { opacity: 1; }
 <div class="sky sky--cold"></div>
 <div class="fog"></div>
 <div class="fog fog--low"></div>
-<div class="dark"></div>
 <div class="woods" aria-hidden="true"><canvas id="woods"></canvas></div>
 <div class="vignette"></div>
 
@@ -783,14 +753,12 @@ html.entered .dark { opacity: 1; }
             <span class="r-art"><span class="r-bob"><img src="img/prism-box.png" alt=""></span></span>
             <span class="r-amt">1 Prism Box</span>
             <span class="r-cost">1 quest</span>
-            <span class="r-hold">hold to choose</span>
           </button>
           <button class="reward hot" type="button" data-tier="2">
             <span class="r-tag">best value</span>
             <span class="r-art stack"><span class="r-bob"><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""></span></span>
             <span class="r-amt">3 Prism Boxes</span>
             <span class="r-cost">2 quests</span>
-            <span class="r-hold">hold to choose</span>
           </button>
         </div>
         <p class="hint2">Delivered in-game to <span class="tagUser"></span> in break and steal a verity.</p>
@@ -984,16 +952,12 @@ html.entered .dark { opacity: 1; }
     lookQueued = true;
     requestAnimationFrame(() => {
       lookQueued = false;
-      root.style.setProperty('--lx', ev.clientX + 'px');
-      root.style.setProperty('--ly', ev.clientY + 'px');
-      const lit = root.classList.contains('entered');
       for (const e of woods.querySelectorAll('.eyes')) {
         const r = e.getBoundingClientRect();
         const dx = ev.clientX - (r.left + r.width / 2), dy = ev.clientY - (r.top + r.height / 2);
         const len = Math.hypot(dx, dy) || 1;
         e.style.setProperty('--px', (dx / len * 1.6).toFixed(2) + 'px');
         e.style.setProperty('--py', (dy / len * .7).toFixed(2) + 'px');
-        e.classList.toggle('lit', lit && len < 120);
       }
     });
   }, { passive: true });
@@ -1187,7 +1151,6 @@ html.entered .dark { opacity: 1; }
   const step = (name) => {
     for (const k in steps) for (const el of steps[k]) el.hidden = k !== name;
     $('#stepNo').textContent = { name: 'Step 1 of 4', check: 'Step 2 of 4', reward: 'Step 3 of 4', quest: 'Step 4 of 4', unlocked: 'Unlocked' }[name];
-    requestAnimationFrame(shyAll);
   };
   let found = null;
 
@@ -1416,31 +1379,7 @@ html.entered .dark { opacity: 1; }
       card.style.setProperty('--rx', '0deg');
       card.style.setProperty('--ry', '0deg');
     });
-    // press and hold to choose: a ring fills while the box shakes, then it bursts open
-    let holdStart = 0, holdRaf = 0;
-    const stopHold = () => {
-      cancelAnimationFrame(holdRaf);
-      card.classList.remove('holding');
-      card.style.setProperty('--hold', '0');
-    };
-    card.addEventListener('pointerdown', (e) => {
-      if (card.disabled || reduce.matches) return;
-      e.preventDefault();
-      if (card.setPointerCapture) card.setPointerCapture(e.pointerId);
-      card.classList.add('holding');
-      holdStart = performance.now();
-      sound.key();
-      const tickHold = (now) => {
-        const p = Math.min(1, (now - holdStart) / 900);
-        card.style.setProperty('--hold', p.toFixed(3));
-        if (p >= 1) { stopHold(); pickReward(card); return; }
-        holdRaf = requestAnimationFrame(tickHold);
-      };
-      holdRaf = requestAnimationFrame(tickHold);
-    });
-    for (const type of ['pointerup', 'pointercancel']) card.addEventListener(type, stopHold);
-    // keyboard (Enter / Space) and reduced motion choose straight away
-    card.addEventListener('click', (e) => { if (e.detail === 0 || reduce.matches) pickReward(card); });
+    card.addEventListener('click', () => pickReward(card));
   }
 
   function pickReward(card) {
@@ -1588,56 +1527,6 @@ html.entered .dark { opacity: 1; }
     const go = () => step('unlocked');
     setTimeout(() => (reduce.matches ? go() : engulf(gooFill, go)), 900); // let the bar finish filling first
   }
-  /* ---------- big headings: the letters flinch away from the pointer and spring back ---------- */
-  const canHover = matchMedia('(hover: hover)').matches;
-  let shyLetters = [], shyPtr = null;
-  addEventListener('pointermove', (e) => { shyPtr = [e.clientX, e.clientY]; }, { passive: true });
-  function splitText(node) {
-    for (const child of [...node.childNodes]) {
-      if (child.nodeType === 3) {
-        const frag = document.createDocumentFragment();
-        for (const part of child.textContent.split(/(\s+)/)) {
-          if (!part) continue;
-          if (/^\s+$/.test(part)) { frag.append(part); continue; }
-          const w = document.createElement('span');
-          w.className = 'w';
-          for (const c of part) {
-            const s = document.createElement('span');
-            s.className = 'ch';
-            s.textContent = c;
-            w.append(s);
-          }
-          frag.append(w);
-        }
-        child.replaceWith(frag);
-      } else if (child.nodeType === 1 && !/^(SMALL|BR)$/.test(child.tagName) && !child.classList.contains('w')) {
-        splitText(child);
-      }
-    }
-  }
-  function shyAll() {
-    shyLetters = [];
-    if (!canHover || reduce.matches) return;
-    for (const h of document.querySelectorAll('.step:not([hidden]) .g-h')) {
-      splitText(h);
-      for (const el of h.querySelectorAll('.ch')) shyLetters.push({ el, x: 0, y: 0 });
-    }
-  }
-  function shyFrame() {
-    requestAnimationFrame(shyFrame);
-    if (!shyLetters.length || !shyPtr) return;
-    for (const L of shyLetters) {
-      const r = L.el.getBoundingClientRect();
-      const dx = r.left + r.width / 2 - L.x - shyPtr[0], dy = r.top + r.height / 2 - L.y - shyPtr[1];
-      const d = Math.hypot(dx, dy) || 1, push = Math.max(0, 1 - d / 130) * 34;
-      L.x += (dx / d * push - L.x) * .2;
-      L.y += (dy / d * push - L.y) * .2;
-      L.el.style.transform = Math.abs(L.x) + Math.abs(L.y) < .05 ? ''
-        : 'translate(' + L.x.toFixed(1) + 'px, ' + L.y.toFixed(1) + 'px) rotate(' + (L.x * .8).toFixed(1) + 'deg)';
-    }
-  }
-  requestAnimationFrame(shyFrame);
-
   /* ---------- the arm ---------- */
   const NS = 'http://www.w3.org/2000/svg';
   const mk = (parent, tag, cls) => {
