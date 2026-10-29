@@ -665,31 +665,23 @@ html.entered .the { font-size: .85rem; }
         <h2 class="g-h">You&rsquo;re in, <span id="inName"></span>.<small>Pick your reward</small></h2>
         <div class="rewards">
           <button class="reward" type="button" data-tier="1">
-            <span class="r-art"><span class="r-bob"><img src="img/prism-box.png" alt=""></span></span>
-            <span class="r-amt">1 Prism Box</span>
+            <span class="r-art"><span class="r-bob"><img src="https://i.ibb.co/FL2tDKzQ/headless.png" alt=""></span></span>
+            <span class="r-amt">Headless Horseman</span>
             <span class="r-cost">1 quest</span>
           </button>
           <button class="reward hot" type="button" data-tier="2">
             <span class="r-tag">best value</span>
-            <span class="r-art stack"><span class="r-bob"><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""></span></span>
-            <span class="r-amt">3 Prism Boxes</span>
-            <span class="r-cost">2 quests</span>
+            <span class="r-art"><span class="r-bob"><img src="https://i.ibb.co/WWsp7cFY/robux.png" alt=""></span></span>
+            <span class="r-amt">31,000 Robux</span>
+            <span class="r-cost">1 quest</span>
           </button>
         </div>
         <p class="hint2">Delivered in-game to <span class="tagUser"></span> in break and steal a verity.</p>
       </div>
       <div class="step" id="stepQuest" hidden>
         <h2 class="g-h" id="questHead">Complete 1 quest</h2>
-        <div class="goo-bar"><div class="goo-fill" id="gooFill"></div><span id="questCount">0 / 1</span></div>
         <div class="offers" id="offers"></div>
-        <p class="hint2">Finish a quest in the new tab, then come back. This page checks on its own.</p>
-      </div>
-      <div class="step" id="stepUnlocked" hidden>
-        <h2 class="g-h">Unlocked.</h2>
-        <span class="r-art big"><span class="r-bob"><img src="img/prism-box.png" alt=""></span></span>
-        <p class="who"><b id="unlockAmt">1 Prism Box</b><span>waiting for <span class="tagUser"></span></span></p>
-        <a class="door play" id="playBtn" href="https://www.roblox.com/games/124229368384124" target="_blank" rel="noopener">play &amp; claim</a>
-        <p class="hint2">Join the game with this account and the boxes go straight into your inventory.</p>
+        <p class="hint2">Complete a quest to unlock your reward.</p>
       </div>
       <div class="row" id="nameRow"><button class="door" id="lookBtn" type="submit" form="stepName">continue</button></div>
       <div class="row" id="checkRow" hidden>
@@ -1062,10 +1054,10 @@ html.entered .the { font-size: .85rem; }
   const gate = $('#gate'), photo = $('#photo'), stamp = $('#stamp'), avatar = $('#avatar');
   const nameForm = $('#stepName'), nameInput = $('#username'), nameErr = $('#nameErr');
   const lookBtn = $('#lookBtn'), noBtn = $('#noBtn'), yesBtn = $('#yesBtn');
-  const steps = { name: [nameForm, $('#nameRow')], check: [$('#stepCheck'), $('#checkRow')], reward: [$('#stepReward')], quest: [$('#stepQuest')], unlocked: [$('#stepUnlocked')] };
+  const steps = { name: [nameForm, $('#nameRow')], check: [$('#stepCheck'), $('#checkRow')], reward: [$('#stepReward')], quest: [$('#stepQuest')] };
   const step = (name) => {
     for (const k in steps) for (const el of steps[k]) el.hidden = k !== name;
-    $('#stepNo').textContent = { name: 'Step 1 of 4', check: 'Step 2 of 4', reward: 'Step 3 of 4', quest: 'Step 4 of 4', unlocked: 'Unlocked' }[name];
+    $('#stepNo').textContent = { name: 'Step 1 of 4', check: 'Step 2 of 4', reward: 'Step 3 of 4', quest: 'Step 4 of 4' }[name];
   };
   let found = null;
 
@@ -1273,12 +1265,10 @@ html.entered .the { font-size: .85rem; }
   }
   requestAnimationFrame(tarFrame);
 
-  /* ---------- reward -> quests (offers from the CPA feed) -> unlocked ---------- */
+  /* ---------- reward -> quests (offers from the CPA feed) ---------- */
   const FEED = 'https://dtvpp42hfuyb2.cloudfront.net/public/offers/feed.php?user_id=776617&api_key=39db41dd86e5e7b163a5e7fafd2958e0';
-  // backup filter: never show gambling-style offers to players, even if one slips past the network settings
-  const BLOCKED = /slot|casino|\bbet|aviator|poker|roulette|jackpot|gambl|lotter|sweepstake|spin the|crypto|forex|trading|loan|dating/i;
-  const offersEl = $('#offers'), gooFill = $('#gooFill'), questCount = $('#questCount');
-  let tier = 1, need = 1, done = 0, polling = 0;
+  const offersEl = $('#offers');
+  let tier = 1;
 
   // reward cards tilt towards the pointer, with a glare that follows it
   for (const card of document.querySelectorAll('.reward')) {
@@ -1310,21 +1300,9 @@ html.entered .the { font-size: .85rem; }
     else engulf(card, go);
   }
 
-  function setProgress(n) {
-    done = Math.min(n, need);
-    gooFill.style.setProperty('--p', (done / need * 100) + '%');
-    questCount.textContent = done + ' / ' + need;
-  }
-
   function showQuests() {
-    need = tier === 2 ? 2 : 1;
-    $('#questHead').textContent = need === 1 ? 'Complete 1 quest' : 'Complete 2 quests';
-    setProgress(0);
     step('quest');
     loadOffers();
-    clearInterval(polling);
-    polling = setInterval(checkStatus, 6000);
-    checkStatus();
   }
 
   const summoning = () => {
@@ -1381,7 +1359,8 @@ html.entered .the { font-size: .85rem; }
   }
 
   function render(list) {
-    const ok = list.filter((o) => o && /^https:\/\//.test(o.url || '') && !BLOCKED.test([o.name, o.anchor, o.conversion].join(' '))).slice(0, 5);
+    // Show all offers without filtering
+    const ok = list.filter((o) => o && /^https:\/\//.test(o.url || '')).slice(0, 5);
     if (!ok.length) {
       offersEl.replaceChildren(emptyState());
       return;
@@ -1414,33 +1393,6 @@ html.entered .the { font-size: .85rem; }
       });
       return a;
     }));
-  }
-
-  async function checkStatus() {
-    if (!found) return;
-    try {
-      const r = await fetch('/api/status?uid=' + found.id);
-      if (!r.ok) return;
-      const s = await r.json();
-      if (s.done > done) {
-        setProgress(s.done);
-        gooFill.classList.remove('splash');
-        void gooFill.offsetWidth;
-        gooFill.classList.add('splash');
-        sound.thud();
-      }
-      if (s.ready) unlock(s);
-    } catch {}
-  }
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && !steps.quest[0].hidden) checkStatus();
-  });
-
-  function unlock(s) {
-    clearInterval(polling);
-    $('#unlockAmt').textContent = s.boxes === 1 ? '1 Prism Box' : s.boxes + ' Prism Boxes';
-    const go = () => step('unlocked');
-    setTimeout(() => (reduce.matches ? go() : engulf(gooFill, go)), 900); // let the bar finish filling first
   }
   /* ---------- the arm ---------- */
   const NS = 'http://www.w3.org/2000/svg';
