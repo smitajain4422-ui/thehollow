@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The Hollow Countdown – Roblox Halloween 2026 | Days Until October 31</title>
-<meta name="description" content="Live countdown to October 31 for The Hollow, Roblox's Halloween 2026 event. See how many days, hours, minutes and seconds are left. Fan-made and unofficial.">
+<title>The Hollow Countdown – Roblox Halloween 2026 | Days Until November 2</title>
+<meta name="description" content="Live countdown to November 2 for The Hollow, Roblox's Halloween 2026 event. See how many days, hours, minutes and seconds are left. Fan-made and unofficial.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://thehollow.gifts/">
 <meta name="theme-color" content="#06081a">
@@ -12,22 +12,22 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Hollow Countdown">
 <meta property="og:title" content="The Hollow Countdown – Roblox Halloween 2026">
-<meta property="og:description" content="How long until October 31? A spooky live countdown for Roblox's The Hollow event. Don't go in.">
+<meta property="og:description" content="How long until November 2? A spooky live countdown for Roblox's The Hollow event. Don't go in.">
 <meta property="og:url" content="https://thehollow.gifts/">
 <meta property="og:image" content="https://thehollow.gifts/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Hollow countdown to October 31 over a red-lit dead forest">
+<meta property="og:image:alt" content="The Hollow countdown to November 2 over a red-lit dead forest">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Hollow Countdown – Roblox Halloween 2026">
-<meta name="twitter:description" content="How long until October 31? A spooky live countdown for Roblox's The Hollow event.">
+<meta name="twitter:description" content="How long until November 2? A spooky live countdown for Roblox's The Hollow event.">
 <meta name="twitter:image" content="https://thehollow.gifts/og-image.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
   "name": "The Hollow Countdown",
-  "description": "Live countdown to October 31 for The Hollow, Roblox's Halloween 2026 event. Fan-made and unofficial.",
+  "description": "Live countdown to November 2 for The Hollow, Roblox's Halloween 2026 event. Fan-made and unofficial.",
   "url": "https://thehollow.gifts/",
   "inLanguage": "en",
   "about": { "@type": "Thing", "name": "The Hollow (Roblox Halloween 2026 event)" }
@@ -48,7 +48,9 @@
   --faint: rgba(239, 227, 198, .42);
   --ink: #07050a;
   --spirit: #7fb2ff;
-
+  --paper: #e6d7b2;
+  --sepia: #2b120c;
+  --ink-red: #a3130e;
   /* these shift when you go inside */
   --glow: var(--ember);
   --digit: var(--bone);
@@ -236,6 +238,187 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
 .sound[aria-pressed="true"] .wave { display: inline; }
 .sound[aria-pressed="true"] .mute { display: none; }
 
+/* ---------- the opening (timer hits zero) ---------- */
+@property --burn { syntax: '<percentage>'; inherits: false; initial-value: -12%; }
+html.arrived .num { color: #ff3a24; }
+.num { position: relative; }
+.ooze {
+  position: absolute; top: 72%; left: var(--x); width: var(--w); height: 0;
+  border-radius: 0 0 99px 99px;
+  background: linear-gradient(#ff2a1a, #8d0709);
+  box-shadow: 0 0 6px rgba(200, 18, 15, .55);
+  animation: ooze var(--t) cubic-bezier(.55, 0, .85, .55) var(--d) forwards;
+  pointer-events: none;
+}
+.ooze::after {
+  content: ""; position: absolute; left: 50%; bottom: -3px;
+  width: calc(var(--w) * 1.9); height: calc(var(--w) * 2.2);
+  transform: translateX(-50%);
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  background: #a50b0c;
+}
+@keyframes ooze { to { height: var(--h); } }
+html.quake .stage { animation: quake .45s steps(3) 2; }
+@keyframes quake {
+  0% { transform: translate(-7px, 4px); } 33% { transform: translate(6px, -5px); }
+  66% { transform: translate(-4px, -2px); } 100% { transform: translate(0, 0); }
+}
+.title.glitch .hollow { animation: glitch .9s steps(5) 2; }
+@keyframes glitch {
+  0% { transform: translateX(3px); text-shadow: 4px 0 #ff1a1a, -4px 0 #3fa9ff; }
+  40% { transform: translateX(-4px) skewX(8deg); text-shadow: -5px 0 #ff1a1a, 5px 0 #3fa9ff; }
+  70% { transform: none; text-shadow: 2px 3px #ff1a1a, -2px -3px #3fa9ff; }
+  100% { transform: none; }
+}
+.blackout.red { background: #6b0007; }
+.blackout.red.run { animation: redflash 1s linear; }
+@keyframes redflash { 0% { opacity: 0; } 8% { opacity: .75; } 20% { opacity: .1; } 32% { opacity: .6; } 100% { opacity: 0; } }
+.door.open { animation: beckon 1.8s ease-in-out infinite; }
+@keyframes beckon { 50% { filter: drop-shadow(0 0 18px rgba(255, 40, 20, .9)); transform: scale(1.04); } }
+
+/* eyes in the woods have pupils that follow the pointer */
+.eye { position: relative; }
+.eye::after {
+  content: ""; position: absolute;
+  left: calc(50% - 1.2px + var(--px, 0px)); top: calc(50% - 1.3px + var(--py, 0px));
+  width: 2.4px; height: 2.6px; border-radius: 50%; background: #1b0204;
+  transition: left .25s ease, top .25s ease;
+}
+
+/* ---------- going in: the ticket ---------- */
+.gate { width: min(100%, 25rem); display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+.hang {
+  position: relative; width: 100%; padding-top: 2.6rem;
+  transform-origin: 50% 0; animation: sway 6s ease-in-out infinite;
+  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, .6));
+}
+.hang::before {
+  content: ""; position: absolute; left: 50%; top: .35rem; width: 2px; height: 3.2rem;
+  transform: translateX(-50%); background: linear-gradient(#0a0a0a, #4a3020);
+}
+.hang::after {
+  content: ""; position: absolute; left: 50%; top: 0; width: 12px; height: 12px; transform: translateX(-50%);
+  border-radius: 50%; background: radial-gradient(circle at 35% 35%, #9a9a9a, #2a2a2a 70%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .7);
+}
+@keyframes sway { 0%, 100% { transform: rotate(-1.8deg); } 50% { transform: rotate(1.8deg); } }
+.ticket {
+  position: relative; padding: 1.4rem 1.6rem 0; text-align: center; color: var(--sepia);
+  background:
+    radial-gradient(ellipse 60% 40% at 18% 12%, rgba(255, 255, 255, .45), transparent 70%),
+    radial-gradient(circle at 14% 78%, transparent 24px, rgba(110, 60, 20, .2) 26px, transparent 31px),
+    radial-gradient(ellipse 50% 35% at 75% 96%, rgba(110, 55, 15, .3), transparent 70%),
+    var(--paper);
+  -webkit-mask: radial-gradient(circle at 0 50%, transparent 8px, #000 9px) left / 51% 24px repeat-y,
+    radial-gradient(circle at 100% 50%, transparent 8px, #000 9px) right / 51% 24px repeat-y;
+  mask: radial-gradient(circle at 0 50%, transparent 8px, #000 9px) left / 51% 24px repeat-y,
+    radial-gradient(circle at 100% 50%, transparent 8px, #000 9px) right / 51% 24px repeat-y;
+}
+.ticket::before {
+  content: ""; position: absolute; left: 50%; top: .55rem; width: 14px; height: 14px; transform: translateX(-50%);
+  border-radius: 50%; background: #0c0610; box-shadow: inset 0 1px 2px rgba(0, 0, 0, .8);
+}
+.ticket::after {
+  content: ""; position: absolute; right: 1rem; top: 3.4rem; width: 44px; height: 56px;
+  border-radius: 45% 55% 50% 50%; transform: rotate(18deg); pointer-events: none;
+  background: repeating-radial-gradient(ellipse at 50% 62%, rgba(160, 15, 12, .38) 0 1.5px, transparent 1.5px 4px);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 55%, #000 45%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 50% 55%, #000 45%, transparent 72%);
+}
+.ticket.strike { animation: strike .09s linear; }
+@keyframes strike { 50% { transform: translate(1px, 1.5px); } }
+.t-top {
+  margin: 0; padding-top: .4rem; display: flex; justify-content: space-between;
+  font: .78rem/1 var(--font-type); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-red);
+}
+.t-name { margin: .5rem 0 1rem; font: 800 3rem/.9 var(--font-display); color: var(--ink-red); text-shadow: 1px 1px 0 rgba(0, 0, 0, .15); }
+.t-step { display: flex; flex-direction: column; align-items: center; gap: .55rem; padding-bottom: 1.2rem; }
+.t-lbl { font: .8rem/1 var(--font-type); letter-spacing: .2em; text-transform: uppercase; color: rgba(43, 18, 12, .7); }
+#username {
+  box-sizing: border-box; width: 100%; padding: .35rem .2rem .45rem;
+  border: 0; border-bottom: 2px dashed rgba(43, 18, 12, .55); border-radius: 0;
+  background: transparent; color: var(--sepia); caret-color: var(--ink-red);
+  font: 1.6rem/1.2 var(--font-type); letter-spacing: .04em; text-align: center;
+}
+#username::placeholder { color: rgba(43, 18, 12, .32); }
+#username:focus { outline: none; border-bottom-color: var(--ink-red); }
+.err { margin: 0; min-height: 1.3em; font: .92rem/1.35 var(--font-type); color: var(--ink-red); }
+.t-q { margin: .3rem 0 0; font: 700 1.9rem/1 var(--font-num); color: var(--sepia); }
+.t-in { margin: 0 0 .2rem; font: 800 2.4rem/1.05 var(--font-display); color: var(--ink-red); overflow-wrap: anywhere; text-wrap: balance; }
+.stub {
+  display: flex; flex-direction: column; gap: .3rem; margin: 0 -1.6rem; padding: .8rem 1.6rem 1rem;
+  border-top: 2px dashed rgba(43, 18, 12, .45);
+  font: .68rem/1.35 var(--font-type); letter-spacing: .12em; text-transform: uppercase; color: rgba(43, 18, 12, .72);
+}
+.stub b { font: 700 1rem/1 var(--font-num); letter-spacing: .3em; color: var(--sepia); }
+.ticket.torn .stub { animation: tear 1s cubic-bezier(.5, 0, .9, .6) forwards; }
+@keyframes tear { 15% { transform: translateY(4px) rotate(-2deg); } 100% { transform: translate(40px, 160px) rotate(22deg); opacity: 0; } }
+
+/* the polaroid */
+.photo {
+  position: relative; margin: 0 0 .4rem; width: 9.5rem; padding: .7rem .7rem 2.9rem;
+  background: linear-gradient(#f6f1e4, #e9e1cd); transform: rotate(-3deg);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .6);
+}
+.photo::before {
+  content: ""; position: absolute; left: 50%; top: -.7rem; width: 5.5rem; height: 1.5rem; z-index: 2;
+  transform: translateX(-50%) rotate(3deg); background: rgba(225, 215, 170, .62); box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+}
+.pic { position: relative; aspect-ratio: 1; overflow: hidden; background: radial-gradient(circle at 50% 35%, #3a1a2a, #0b0710 75%); }
+.pic::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, .85);
+  background: repeating-linear-gradient(97deg, transparent 0 37px, rgba(255, 255, 255, .06) 37px 38px);
+}
+#avatar { display: block; width: 100%; height: 100%; object-fit: contain; animation: develop 2.8s ease .15s both; }
+@keyframes develop {
+  0% { filter: brightness(0) blur(8px); }
+  35% { filter: brightness(.45) sepia(1) saturate(3) hue-rotate(-25deg) blur(3px); }
+  100% { filter: none; }
+}
+.cap { position: absolute; left: .5rem; right: .5rem; bottom: .45rem; display: flex; flex-direction: column; gap: .1rem; font: 1.05rem/1.1 var(--font-type); color: var(--sepia); overflow-wrap: anywhere; }
+.cap small { font-size: .78rem; opacity: .7; }
+.stamp {
+  position: absolute; left: 50%; top: 74%; z-index: 3; padding: .15em .45em;
+  border: 4px double #e0241a; border-radius: 6px;
+  font: 800 2.1rem/1 var(--font-num); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-red);
+  opacity: 0; transform: translate(-50%, -50%) rotate(-16deg) scale(2.8); pointer-events: none;
+  color: #e0241a; background: rgba(224, 36, 26, .08); text-shadow: 0 0 1px rgba(224, 36, 26, .7), 0 0 10px rgba(255, 40, 20, .35);
+}
+.stamp.hit { animation: stampHit .3s cubic-bezier(.2, 1.5, .35, 1) .05s forwards; }
+@keyframes stampHit { to { opacity: .92; transform: translate(-50%, -50%) rotate(-16deg) scale(1); } }
+.photo.burn {
+  -webkit-mask-image: radial-gradient(circle at 88% 96%, transparent var(--burn), #000 calc(var(--burn) + 7%));
+  mask-image: radial-gradient(circle at 88% 96%, transparent var(--burn), #000 calc(var(--burn) + 7%));
+  animation: burn 1.1s ease-in forwards;
+}
+.photo.burn::after {
+  content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  background: radial-gradient(circle at 88% 96%, transparent calc(var(--burn) - 2%), #ffb347 var(--burn),
+    #ff3d12 calc(var(--burn) + 2.5%), rgba(40, 10, 0, .9) calc(var(--burn) + 5%), transparent calc(var(--burn) + 9%));
+  animation: burn 1.1s ease-in forwards;
+}
+@keyframes burn { from { --burn: -12%; } to { --burn: 150%; } }
+.flash { position: fixed; inset: 0; z-index: 19; background: #fff6e8; opacity: 0; pointer-events: none; }
+.flash.run { animation: camflash .55s ease-out; }
+@keyframes camflash { 8% { opacity: .85; } 100% { opacity: 0; } }
+.gate .row { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; }
+.door[disabled] { opacity: .55; cursor: progress; }
+.door.ghost { background: rgba(6, 8, 26, .55); box-shadow: inset 0 0 0 1.5px var(--faint), 0 10px 22px rgba(0, 0, 0, .5); }
+.door.ghost::before, .door.ghost::after { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hang, .door.open, .ooze, .title.glitch .hollow { animation: none; }
+  .ooze { height: var(--h); }
+}
+/* once you go in, the title steps back so the ticket fits on one screen */
+html.entered .stage { gap: 1rem; padding-block: clamp(.8rem, 3vh, 2rem) clamp(1.5rem, 6vh, 3rem); }
+html.entered .hollow { font-size: clamp(2.6rem, 8vw, 4.4rem); }
+html.entered .the { font-size: .85rem; }
+html.entered .hang { padding-top: 2.1rem; }
+html.entered .t-name { margin: .35rem 0 .7rem; font-size: 2.5rem; }
+html.entered .stub { padding: .6rem 1.6rem .75rem; }
+.gate .row .door { font-size: 1.02rem; padding: .85em 1.5em .9em; }
+
 /* ---------- the arm ---------- */
 #reach { inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; }
 .rim, .ink, .shine, .drip, .crease { fill: none; stroke-linecap: round; }
@@ -285,7 +468,7 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
 <main class="stage">
   <h1 class="title"><span class="the">The</span> <span class="hollow">Hollow</span></h1>
 
-  <section class="count" aria-label="Countdown to October 31">
+  <section class="count" aria-label="Countdown to November 2">
     <div class="clock" role="timer">
       <div class="unit"><span class="num" id="d">00</span><span class="lbl">days</span></div>
       <span class="sep" aria-hidden="true">:</span>
@@ -295,15 +478,45 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
       <span class="sep" aria-hidden="true">:</span>
       <div class="unit"><span class="num" id="s">00</span><span class="lbl">seconds</span></div>
     </div>
-    <p class="until" id="until">until October 31</p>
+    <p class="until" id="until">until November 2</p>
   </section>
 
   <div class="door-wrap">
     <button class="door" id="door" type="button"><span id="doorLabel">don’t go in</span></button>
     <p class="whisper" id="whisper" aria-live="polite"></p>
   </div>
-</main>
 
+  <section class="gate" id="gate" hidden aria-label="Enter The Hollow">
+    <div class="hang">
+      <div class="ticket" id="ticket">
+        <p class="t-top"><span>admit one</span><span id="serial">No. 0000</span></p>
+        <p class="t-name">The Hollow</p>
+        <form class="t-step" id="stepName" novalidate>
+          <label class="t-lbl" for="username">your Roblox username</label>
+          <input id="username" name="username" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="20" placeholder="sign here">
+          <p class="err" id="nameErr" role="alert"></p>
+        </form>
+        <div class="t-step" id="stepCheck" hidden>
+          <figure class="photo" id="photo">
+            <div class="pic"><img id="avatar" alt="Your Roblox avatar"></div>
+            <figcaption class="cap"><span id="capName"></span><small id="capUser"></small></figcaption>
+            <span class="stamp" id="stamp">entered</span>
+          </figure>
+          <p class="t-q">Is this you?</p>
+        </div>
+        <div class="t-step" id="stepIn" hidden>
+          <p class="t-in">You&rsquo;re in,<br><span id="inName"></span>.</p>
+        </div>
+        <div class="stub"><b>11 &middot; 02 &middot; 2026</b><span>not responsible for anything that follows you home</span></div>
+      </div>
+    </div>
+    <div class="row" id="nameRow"><button class="door" id="lookBtn" type="submit" form="stepName">continue</button></div>
+    <div class="row" id="checkRow" hidden>
+      <button class="door ghost" id="noBtn" type="button">no, not me</button>
+      <button class="door" id="yesBtn" type="button">yes, that&rsquo;s me</button>
+    </div>
+  </section>
+</main>
 
 <button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Turn sound on">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M3 9h4l5-4v14l-5-4H3z"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M16 9l5 6M21 9l-5 6"/></svg>
@@ -343,6 +556,7 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
 
 <div class="grain"></div>
 <div class="blackout" id="blackout"></div>
+<div class="flash" id="flash"></div>
 
 <script>
 (() => {
@@ -355,14 +569,12 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
   const untilEl = $('#until');
   const pad = (n) => String(n).padStart(2, '0');
 
-  function nextOct31(now) {
-    const t = new Date(now.getFullYear(), 9, 31);
-    return now < t ? t : new Date(now.getFullYear() + 1, 9, 31);
-  }
+  // the countdown runs to the end of The Hollow (Nov 2); open the page with #test at the end of the address
+  // to make it run out 10 seconds after loading
+  const TEST = location.hash === '#test';
+  const target = TEST ? new Date(Date.now() + 10000) : new Date(2026, 10, 2);
   function tick() {
-    const now = new Date();
-    const arrived = now.getMonth() === 9 && now.getDate() === 31;
-    const left = arrived ? 0 : Math.ceil((nextOct31(now) - now) / 1000);
+    const left = Math.max(0, Math.ceil((target - Date.now()) / 1000));
     const parts = {
       d: Math.floor(left / 86400),
       h: Math.floor(left % 86400 / 3600),
@@ -373,13 +585,17 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
       const v = pad(parts[k]);
       if (out[k].textContent !== v) out[k].textContent = v;
     }
-    root.classList.toggle('arrived', arrived);
-    const label = arrived ? 'It’s October 31.' : 'until October 31';
+    if (left === 0) {
+      root.classList.add('arrived');
+      untilEl.textContent = 'The Hollow is open.';
+      document.dispatchEvent(new Event('hollow:open'));
+      return;
+    }
+    const label = TEST ? 'until the test opens' : 'until November 2';
     if (untilEl.textContent !== label) untilEl.textContent = label;
     setTimeout(tick, 1000 - (Date.now() % 1000) + 8);
   }
   tick();
-
   /* ---------- the woods ---------- */
   function rng(seed) {
     return () => {
@@ -452,7 +668,22 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
     e.innerHTML = '<i class="eye"></i><i class="eye"></i>';
     woods.appendChild(e);
   }
-
+  // their pupils follow the pointer
+  let lookQueued = false;
+  addEventListener('pointermove', (ev) => {
+    if (lookQueued) return;
+    lookQueued = true;
+    requestAnimationFrame(() => {
+      lookQueued = false;
+      for (const e of woods.querySelectorAll('.eyes')) {
+        const r = e.getBoundingClientRect();
+        const dx = ev.clientX - (r.left + r.width / 2), dy = ev.clientY - (r.top + r.height / 2);
+        const len = Math.hypot(dx, dy) || 1;
+        e.style.setProperty('--px', (dx / len * 1.6).toFixed(2) + 'px');
+        e.style.setProperty('--py', (dy / len * .7).toFixed(2) + 'px');
+      }
+    });
+  }, { passive: true });
   /* ---------- sound: all made in code, and it only starts after a click ---------- */
   const sound = (() => {
     const btn = $('#sound');
@@ -555,8 +786,31 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
       o.start(t); o.stop(t + .2);
     }
 
-    return { door, grab };
-  })();
+    function thud() {
+      if (!on) return;
+      const t = ac.currentTime;
+      const b = ac.createOscillator(), bg = gain();
+      b.frequency.setValueAtTime(110, t);
+      b.frequency.exponentialRampToValueAtTime(35, t + .5);
+      env(bg, t, .9, .005, .5);
+      b.connect(bg).connect(master);
+      b.start(t); b.stop(t + .6);
+      const n = noiseSrc(), ng = gain();
+      env(ng, t, .4, .002, .12);
+      n.connect(filter('lowpass', 900)).connect(ng).connect(master);
+      n.start(t); n.stop(t + .2);
+    }
+
+    function key() {
+      if (!on) return;
+      const t = ac.currentTime;
+      const n = noiseSrc(), g = gain();
+      env(g, t, .18, .001, .03);
+      n.connect(filter('bandpass', 2400 + Math.random() * 800, 3)).connect(g).connect(master);
+      n.start(t); n.stop(t + .06);
+    }
+
+    return { door, grab, thud, key };  })();
 
   /* ---------- the door ---------- */
   const door = $('#door'), doorLabel = $('#doorLabel'), whisper = $('#whisper'), blackout = $('#blackout');
@@ -566,8 +820,8 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
     whisper.textContent = on ? 'you went in anyway.' : 'you got out. this time.';
   }
   door.addEventListener('click', () => {
-    const goingIn = !root.classList.contains('inside');
-    sound.door(goingIn);
+    if (root.classList.contains('arrived')) { enter(); return; }
+    const goingIn = !root.classList.contains('inside');    sound.door(goingIn);
     mode = 'yank';
     until = performance.now() + 700;
     if (reduce.matches) { setInside(goingIn); return; }
@@ -580,6 +834,130 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
     if (door.matches(':focus-visible')) nextPeek = 0;
   });
 
+  /* ---------- the opening ---------- */
+  const flashEl = $('#flash');
+  const replay = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+  function bleed() {
+    for (const n of document.querySelectorAll('.num')) {
+      for (let i = 0; i < 3; i++) {
+        const d = document.createElement('i');
+        d.className = 'ooze';
+        d.style.cssText = `--x:${15 + Math.random() * 65}%;--w:${3 + Math.random() * 4}px;--h:${(.4 + Math.random() * 1.1).toFixed(2)}em;` +
+          `--t:${(1.6 + Math.random() * 1.8).toFixed(2)}s;--d:${(Math.random() * .9).toFixed(2)}s`;
+        n.appendChild(d);
+      }
+    }
+  }
+  // fresh = it ran out while you watched (quake, red flash, glitch); otherwise the page just loads open
+  function showOpen(fresh) {
+    doorLabel.textContent = 'enter';
+    whisper.textContent = 'it\u2019s open. you can go in now.';
+    door.classList.add('open');
+    bleed();
+    if (!fresh || reduce.matches) return;
+    root.classList.add('quake');
+    $('.title').classList.add('glitch');
+    blackout.classList.add('red');
+    replay(blackout, 'run');
+    sound.thud();
+    setTimeout(() => { root.classList.remove('quake'); blackout.classList.remove('red', 'run'); }, 1100);
+  }
+  let opened = false;
+  document.addEventListener('hollow:open', () => { if (!opened) { opened = true; showOpen(document.visibilityState === 'visible' && performance.now() > 1500); } });
+  if (root.classList.contains('arrived') && !opened) { opened = true; showOpen(false); }
+
+  /* ---------- going in: name -> is this you? -> you're in ---------- */
+  const gate = $('#gate'), ticket = $('#ticket'), photo = $('#photo'), stamp = $('#stamp'), avatar = $('#avatar');
+  const nameForm = $('#stepName'), nameInput = $('#username'), nameErr = $('#nameErr');
+  const lookBtn = $('#lookBtn'), noBtn = $('#noBtn'), yesBtn = $('#yesBtn');
+  const steps = { name: [nameForm, $('#nameRow')], check: [$('#stepCheck'), $('#checkRow')], done: [$('#stepIn')] };
+  const step = (name) => { for (const k in steps) for (const el of steps[k]) el.hidden = k !== name; };
+  $('#serial').textContent = 'No. ' + (1000 + Math.floor(Math.random() * 9000));
+  let found = null;
+
+  function enter() {
+    sound.door(true);
+    const go = () => {
+      root.classList.add('inside', 'entered');
+      $('.count').hidden = true;
+      $('.door-wrap').hidden = true;
+      gate.hidden = false;
+      step('name');
+      nameInput.focus({ preventScroll: true });
+    };
+    if (reduce.matches) { go(); return; }
+    blackout.classList.remove('red');
+    replay(blackout, 'run');
+    setTimeout(go, 260);
+  }
+
+  nameInput.addEventListener('input', () => {
+    nameErr.textContent = '';
+    replay(ticket, 'strike');
+    sound.key();
+  });
+
+  nameForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = nameInput.value.trim();
+    if (!/^[A-Za-z0-9_]{3,20}$/.test(name)) {
+      nameErr.textContent = 'Roblox usernames are 3\u201320 letters, numbers or _.';
+      return;
+    }
+    lookBtn.disabled = true;
+    lookBtn.textContent = 'looking for you\u2026';
+    try {
+      const r = await fetch('/api/roblox?username=' + encodeURIComponent(name));
+      const data = await r.json().catch(() => ({}));
+      if (r.status === 404 && data.error === 'not_found') nameErr.textContent = 'No Roblox player has that username.';
+      else if (!r.ok || !data.id) nameErr.textContent = 'Couldn\u2019t reach Roblox. Try again in a moment.';
+      else showCheck(data);
+    } catch {
+      nameErr.textContent = 'Couldn\u2019t reach Roblox. Check your connection and try again.';
+    }
+    lookBtn.disabled = false;
+    lookBtn.textContent = 'continue';
+  });
+
+  function showCheck(data) {
+    found = data;
+    photo.classList.remove('burn');
+    stamp.classList.remove('hit');
+    avatar.hidden = !data.avatar;
+    if (data.avatar) avatar.src = data.avatar;
+    avatar.style.animation = 'none'; // restart the "developing" animation
+    void avatar.offsetWidth;
+    avatar.style.animation = '';
+    $('#capName').textContent = data.displayName;
+    $('#capUser').textContent = '@' + data.name;
+    noBtn.disabled = yesBtn.disabled = false;
+    step('check');
+    if (!reduce.matches) replay(flashEl, 'run');
+  }
+
+  noBtn.addEventListener('click', () => {
+    noBtn.disabled = yesBtn.disabled = true;
+    const back = () => {
+      step('name');
+      nameInput.focus({ preventScroll: true });
+      nameInput.select();
+    };
+    if (reduce.matches) { back(); return; }
+    photo.classList.add('burn');
+    setTimeout(back, 1150);
+  });
+
+  yesBtn.addEventListener('click', () => {
+    noBtn.disabled = yesBtn.disabled = true;
+    stamp.classList.add('hit');
+    setTimeout(() => { sound.thud(); root.classList.add('quake'); }, 180);
+    setTimeout(() => root.classList.remove('quake'), 1100);
+    setTimeout(() => {
+      $('#inName').textContent = found.displayName;
+      step('done');
+      ticket.classList.add('torn');
+    }, 1400);
+  });
   /* ---------- the arm ---------- */
   const NS = 'http://www.w3.org/2000/svg';
   const mk = (parent, tag, cls) => {
@@ -629,8 +1007,15 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
     const dt = Math.min(.05, (now - last) / 1000);
     last = now;
     t += dt;
-    const s = shape();
-    const R = reachR();
+    if (door.offsetParent === null) { // the door is gone (you went in): no arm
+      if (shown) {
+        shown = false;
+        armG.style.visibility = handWrap.style.visibility = 'hidden';
+      }
+      root.classList.remove('grabbed');
+      return;
+    }
+    const s = shape();    const R = reachR();
     const near = P.active ? nearest(P, s).d : Infinity;
 
     if (mode === 'yank' && now > until) mode = 'rest';
