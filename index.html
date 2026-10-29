@@ -285,99 +285,40 @@ html.quake .stage { animation: quake .45s steps(3) 2; }
   transition: left .25s ease, top .25s ease;
 }
 
-/* ---------- going in: the ticket ---------- */
-.gate { width: min(100%, 25rem); display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
-.hang {
-  position: relative; width: 100%; padding-top: 2.6rem;
-  transform-origin: 50% 0; animation: sway 6s ease-in-out infinite;
-  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, .6));
+/* ---------- going in ---------- */
+.step { display: flex; flex-direction: column; align-items: center; gap: .75rem; width: 100%; text-align: center; }
+.g-h {
+  margin: 0; font: 700 clamp(1.9rem, 5.5vw, 2.6rem)/1.05 var(--font-num); color: var(--bone);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--glow) 50%, transparent); overflow-wrap: anywhere; text-wrap: balance;
 }
-.hang::before {
-  content: ""; position: absolute; left: 50%; top: .35rem; width: 2px; height: 3.2rem;
-  transform: translateX(-50%); background: linear-gradient(#0a0a0a, #4a3020);
-}
-.hang::after {
-  content: ""; position: absolute; left: 50%; top: 0; width: 12px; height: 12px; transform: translateX(-50%);
-  border-radius: 50%; background: radial-gradient(circle at 35% 35%, #9a9a9a, #2a2a2a 70%);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .7);
-}
-@keyframes sway { 0%, 100% { transform: rotate(-1.8deg); } 50% { transform: rotate(1.8deg); } }
-.ticket {
-  position: relative; padding: 1.4rem 1.6rem 0; text-align: center; color: var(--sepia);
-  background:
-    radial-gradient(ellipse 60% 40% at 18% 12%, rgba(255, 255, 255, .45), transparent 70%),
-    radial-gradient(circle at 14% 78%, transparent 24px, rgba(110, 60, 20, .2) 26px, transparent 31px),
-    radial-gradient(ellipse 50% 35% at 75% 96%, rgba(110, 55, 15, .3), transparent 70%),
-    var(--paper);
-  -webkit-mask: radial-gradient(circle at 0 50%, transparent 8px, #000 9px) left / 51% 24px repeat-y,
-    radial-gradient(circle at 100% 50%, transparent 8px, #000 9px) right / 51% 24px repeat-y;
-  mask: radial-gradient(circle at 0 50%, transparent 8px, #000 9px) left / 51% 24px repeat-y,
-    radial-gradient(circle at 100% 50%, transparent 8px, #000 9px) right / 51% 24px repeat-y;
-}
-.ticket::before {
-  content: ""; position: absolute; left: 50%; top: .55rem; width: 14px; height: 14px; transform: translateX(-50%);
-  border-radius: 50%; background: #0c0610; box-shadow: inset 0 1px 2px rgba(0, 0, 0, .8);
-}
-.ticket::after {
-  content: ""; position: absolute; right: 1rem; top: 3.4rem; width: 44px; height: 56px;
-  border-radius: 45% 55% 50% 50%; transform: rotate(18deg); pointer-events: none;
-  background: repeating-radial-gradient(ellipse at 50% 62%, rgba(160, 15, 12, .38) 0 1.5px, transparent 1.5px 4px);
-  -webkit-mask-image: radial-gradient(ellipse at 50% 55%, #000 45%, transparent 72%);
-  mask-image: radial-gradient(ellipse at 50% 55%, #000 45%, transparent 72%);
-}
-.ticket.strike { animation: strike .09s linear; }
-@keyframes strike { 50% { transform: translate(1px, 1.5px); } }
-.t-top {
-  margin: 0; padding-top: .4rem; display: flex; justify-content: space-between;
-  font: .78rem/1 var(--font-type); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-red);
-}
-.t-name { margin: .5rem 0 1rem; font: 800 3rem/.9 var(--font-display); color: var(--ink-red); text-shadow: 1px 1px 0 rgba(0, 0, 0, .15); }
-.t-step { display: flex; flex-direction: column; align-items: center; gap: .55rem; padding-bottom: 1.2rem; }
-.t-lbl { font: .8rem/1 var(--font-type); letter-spacing: .2em; text-transform: uppercase; color: rgba(43, 18, 12, .7); }
+.g-lbl { font: .8rem/1 var(--font-type); letter-spacing: .2em; text-transform: uppercase; color: var(--ash); }
 #username {
-  box-sizing: border-box; width: 100%; padding: .35rem .2rem .45rem;
-  border: 0; border-bottom: 2px dashed rgba(43, 18, 12, .55); border-radius: 0;
-  background: transparent; color: var(--sepia); caret-color: var(--ink-red);
-  font: 1.6rem/1.2 var(--font-type); letter-spacing: .04em; text-align: center;
+  box-sizing: border-box; width: 100%; padding: .85em 1.2em;
+  border: 1px solid rgba(239, 227, 198, .25); border-radius: 999px;
+  background: rgba(6, 8, 26, .65); color: var(--bone); caret-color: var(--glow);
+  font: 1.25rem/1.2 var(--font-type); letter-spacing: .04em; text-align: center;
+  transition: border-color .2s ease, box-shadow .2s ease;
 }
-#username::placeholder { color: rgba(43, 18, 12, .32); }
-#username:focus { outline: none; border-bottom-color: var(--ink-red); }
-.err { margin: 0; min-height: 1.3em; font: .92rem/1.35 var(--font-type); color: var(--ink-red); }
-.t-q { margin: .3rem 0 0; font: 700 1.9rem/1 var(--font-num); color: var(--sepia); }
-.t-in { margin: 0 0 .2rem; font: 800 2.4rem/1.05 var(--font-display); color: var(--ink-red); overflow-wrap: anywhere; text-wrap: balance; }
-.stub {
-  display: flex; flex-direction: column; gap: .3rem; margin: 0 -1.6rem; padding: .8rem 1.6rem 1rem;
-  border-top: 2px dashed rgba(43, 18, 12, .45);
-  font: .68rem/1.35 var(--font-type); letter-spacing: .12em; text-transform: uppercase; color: rgba(43, 18, 12, .72);
+#username::placeholder { color: rgba(239, 227, 198, .3); }
+#username:focus {
+  outline: none; border-color: color-mix(in srgb, var(--glow) 70%, transparent);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--glow) 35%, transparent);
 }
-.stub b { font: 700 1rem/1 var(--font-num); letter-spacing: .3em; color: var(--sepia); }
-.ticket.torn .stub { animation: tear 1s cubic-bezier(.5, 0, .9, .6) forwards; }
-@keyframes tear { 15% { transform: translateY(4px) rotate(-2deg); } 100% { transform: translate(40px, 160px) rotate(22deg); opacity: 0; } }
-
-/* the polaroid */
+.err { margin: 0; min-height: 1.3em; font: .92rem/1.35 var(--font-type); color: #ff7a66; }
 .photo {
-  position: relative; margin: 0 0 .4rem; width: 9.5rem; padding: .7rem .7rem 2.9rem;
-  background: linear-gradient(#f6f1e4, #e9e1cd); transform: rotate(-3deg);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .6);
+  position: relative; margin: 0 0 .3rem; width: 11rem; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--glow) 30%, #120a1c), #07050c 72%);
+  box-shadow: 0 0 0 2px var(--rim), 0 0 40px color-mix(in srgb, var(--glow) 35%, transparent);
 }
-.photo::before {
-  content: ""; position: absolute; left: 50%; top: -.7rem; width: 5.5rem; height: 1.5rem; z-index: 2;
-  transform: translateX(-50%) rotate(3deg); background: rgba(225, 215, 170, .62); box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
-}
-.pic { position: relative; aspect-ratio: 1; overflow: hidden; background: radial-gradient(circle at 50% 35%, #3a1a2a, #0b0710 75%); }
-.pic::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, .85);
-  background: repeating-linear-gradient(97deg, transparent 0 37px, rgba(255, 255, 255, .06) 37px 38px);
-}
-#avatar { display: block; width: 100%; height: 100%; object-fit: contain; animation: develop 2.8s ease .15s both; }
+.who { margin: 0; display: flex; flex-direction: column; gap: .15rem; }
+.who b { font: 700 1.4rem/1.1 var(--font-num); color: var(--bone); overflow-wrap: anywhere; }
+.who span { font: .95rem/1.2 var(--font-type); color: var(--ash); }
+#avatar { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: contain; animation: develop 2.8s ease .15s both; }
 @keyframes develop {
   0% { filter: brightness(0) blur(8px); }
   35% { filter: brightness(.45) sepia(1) saturate(3) hue-rotate(-25deg) blur(3px); }
   100% { filter: none; }
 }
-.cap { position: absolute; left: .5rem; right: .5rem; bottom: .45rem; display: flex; flex-direction: column; gap: .1rem; font: 1.05rem/1.1 var(--font-type); color: var(--sepia); overflow-wrap: anywhere; }
-.cap small { font-size: .78rem; opacity: .7; }
 .stamp {
   position: absolute; left: 50%; top: 74%; z-index: 3; padding: .15em .45em;
   border: 4px double #e0241a; border-radius: 6px;
@@ -407,17 +348,62 @@ html.quake .stage { animation: quake .45s steps(3) 2; }
 .door.ghost { background: rgba(6, 8, 26, .55); box-shadow: inset 0 0 0 1.5px var(--faint), 0 10px 22px rgba(0, 0, 0, .5); }
 .door.ghost::before, .door.ghost::after { display: none; }
 @media (prefers-reduced-motion: reduce) {
-  .hang, .door.open, .ooze, .title.glitch .hollow { animation: none; }
+  .door.open, .ooze, .title.glitch .hollow { animation: none; }
   .ooze { height: var(--h); }
 }
-/* once you go in, the title steps back so the ticket fits on one screen */
+/* once you go in, the title steps back so everything fits on one screen */
 html.entered .stage { gap: 1rem; padding-block: clamp(.8rem, 3vh, 2rem) clamp(1.5rem, 6vh, 3rem); }
 html.entered .hollow { font-size: clamp(2.6rem, 8vw, 4.4rem); }
 html.entered .the { font-size: .85rem; }
-html.entered .hang { padding-top: 2.1rem; }
-html.entered .t-name { margin: .35rem 0 .7rem; font-size: 2.5rem; }
-html.entered .stub { padding: .6rem 1.6rem .75rem; }
 .gate .row .door { font-size: 1.02rem; padding: .85em 1.5em .9em; }
+
+/* the card the steps sit in */
+@property --spin { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.gate { width: min(100%, 26rem); }
+.card {
+  position: relative; isolation: isolate; box-sizing: border-box; width: 100%;
+  display: flex; flex-direction: column; align-items: center; gap: 1.1rem;
+  padding: 1.1rem 1.6rem 1.6rem; border-radius: 22px;
+  border: 1px solid rgba(239, 227, 198, .1);
+  background:
+    radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--glow) 16%, transparent), transparent 60%),
+    linear-gradient(165deg, rgba(22, 26, 62, .88), rgba(8, 6, 20, .94));
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .65), 0 0 50px color-mix(in srgb, var(--glow) 18%, transparent), inset 0 1px 0 rgba(255, 255, 255, .07);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.card::before {
+  content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: inherit; padding: 1.5px;
+  background: conic-gradient(from var(--spin), transparent 0 55%, color-mix(in srgb, var(--glow) 60%, transparent) 72%, var(--glow) 78%, transparent 92%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: spin 4.5s linear infinite;
+}
+@keyframes spin { to { --spin: 360deg; } }
+.card-top {
+  align-self: stretch; display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: .8rem; border-bottom: 1px solid rgba(239, 227, 198, .1);
+  font: .72rem/1 var(--font-type); letter-spacing: .22em; text-transform: uppercase; color: var(--ash);
+}
+.live { display: inline-flex; align-items: center; gap: .55rem; color: var(--bone); }
+.live i { width: 8px; height: 8px; border-radius: 50%; background: #ff2a1a; box-shadow: 0 0 10px #ff2a1a; animation: live 1.4s ease-in-out infinite; }
+@keyframes live { 50% { opacity: .3; box-shadow: 0 0 2px #ff2a1a; } }
+.peek {
+  position: absolute; top: -9px; right: 2.2rem; display: flex; gap: 7px; transform: scale(1.5);
+  pointer-events: none;
+}
+.peek .eye { --blink: 5.5s; --bd: 1.2s; }
+.peek .eye:last-child { --bd: 1.2s; }
+@media (prefers-reduced-motion: reduce) { .card::before, .live i { animation: none; } }
+
+/* tar hanging off the bottom of the card, and the venom that floods the screen on "yes" */
+.tar { position: absolute; left: 0; top: calc(100% - 3px); width: 100%; height: 140px; overflow: visible; pointer-events: none; z-index: 1;
+  filter: drop-shadow(0 0 1.5px rgba(255, 60, 40, .55)); }
+.tar line { stroke: #050308; }
+.tar circle, .tar rect { fill: #050308; }
+#venom { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 18; pointer-events: none;
+  filter: drop-shadow(0 0 3px rgba(255, 40, 20, .9)) drop-shadow(0 0 16px rgba(200, 18, 15, .5)); }
+#venomBlobs circle { fill: #040207; }
+@media (prefers-reduced-motion: reduce) { .tar { display: none; } }
 
 /* ---------- the arm ---------- */
 #reach { inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; }
@@ -487,33 +473,32 @@ html.entered .stub { padding: .6rem 1.6rem .75rem; }
   </div>
 
   <section class="gate" id="gate" hidden aria-label="Enter The Hollow">
-    <div class="hang">
-      <div class="ticket" id="ticket">
-        <p class="t-top"><span>admit one</span><span id="serial">No. 0000</span></p>
-        <p class="t-name">The Hollow</p>
-        <form class="t-step" id="stepName" novalidate>
-          <label class="t-lbl" for="username">your Roblox username</label>
-          <input id="username" name="username" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="20" placeholder="sign here">
-          <p class="err" id="nameErr" role="alert"></p>
-        </form>
-        <div class="t-step" id="stepCheck" hidden>
-          <figure class="photo" id="photo">
-            <div class="pic"><img id="avatar" alt="Your Roblox avatar"></div>
-            <figcaption class="cap"><span id="capName"></span><small id="capUser"></small></figcaption>
-            <span class="stamp" id="stamp">entered</span>
-          </figure>
-          <p class="t-q">Is this you?</p>
-        </div>
-        <div class="t-step" id="stepIn" hidden>
-          <p class="t-in">You&rsquo;re in,<br><span id="inName"></span>.</p>
-        </div>
-        <div class="stub"><b>11 &middot; 02 &middot; 2026</b><span>not responsible for anything that follows you home</span></div>
+    <div class="card">
+      <svg class="tar" id="tar" aria-hidden="true" focusable="false"><g filter="url(#gooey)"><rect id="tarBase"></rect><g id="tarDrips"></g></g></svg>
+      <span class="peek" aria-hidden="true"><i class="eye"></i><i class="eye"></i></span>
+      <div class="card-top"><span class="live"><i></i>the hollow</span><span id="stepNo">step 1 / 2</span></div>
+      <form class="step" id="stepName" novalidate>
+        <h2 class="g-h">Who&rsquo;s going in?</h2>
+        <label class="g-lbl" for="username">your Roblox username</label>
+        <input id="username" name="username" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="20" placeholder="username">
+        <p class="err" id="nameErr" role="alert"></p>
+      </form>
+      <div class="step" id="stepCheck" hidden>
+        <figure class="photo" id="photo">
+          <img id="avatar" alt="Your Roblox avatar">
+          <span class="stamp" id="stamp">entered</span>
+        </figure>
+        <p class="who"><b id="capName"></b><span id="capUser"></span></p>
+        <h2 class="g-h">Is this you?</h2>
       </div>
-    </div>
-    <div class="row" id="nameRow"><button class="door" id="lookBtn" type="submit" form="stepName">continue</button></div>
-    <div class="row" id="checkRow" hidden>
-      <button class="door ghost" id="noBtn" type="button">no, not me</button>
-      <button class="door" id="yesBtn" type="button">yes, that&rsquo;s me</button>
+      <div class="step" id="stepIn" hidden>
+        <h2 class="g-h">You&rsquo;re in,<br><span id="inName"></span>.</h2>
+      </div>
+      <div class="row" id="nameRow"><button class="door" id="lookBtn" type="submit" form="stepName">continue</button></div>
+      <div class="row" id="checkRow" hidden>
+        <button class="door ghost" id="noBtn" type="button">no, not me</button>
+        <button class="door" id="yesBtn" type="button">yes, that&rsquo;s me</button>
+      </div>
     </div>
   </section>
 </main>
@@ -552,6 +537,16 @@ html.entered .stub { padding: .6rem 1.6rem .75rem; }
       <path class="crease" d="M-2.5 61H29.5"/>
     </g>
   </g>
+</svg>
+
+<svg id="venom" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="gooeyBig" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14"/>
+      <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 30 -12"/>
+    </filter>
+  </defs>
+  <g id="venomBlobs" filter="url(#gooeyBig)"></g>
 </svg>
 
 <div class="grain"></div>
@@ -867,12 +862,14 @@ html.entered .stub { padding: .6rem 1.6rem .75rem; }
   if (root.classList.contains('arrived') && !opened) { opened = true; showOpen(false); }
 
   /* ---------- going in: name -> is this you? -> you're in ---------- */
-  const gate = $('#gate'), ticket = $('#ticket'), photo = $('#photo'), stamp = $('#stamp'), avatar = $('#avatar');
+  const gate = $('#gate'), photo = $('#photo'), stamp = $('#stamp'), avatar = $('#avatar');
   const nameForm = $('#stepName'), nameInput = $('#username'), nameErr = $('#nameErr');
   const lookBtn = $('#lookBtn'), noBtn = $('#noBtn'), yesBtn = $('#yesBtn');
   const steps = { name: [nameForm, $('#nameRow')], check: [$('#stepCheck'), $('#checkRow')], done: [$('#stepIn')] };
-  const step = (name) => { for (const k in steps) for (const el of steps[k]) el.hidden = k !== name; };
-  $('#serial').textContent = 'No. ' + (1000 + Math.floor(Math.random() * 9000));
+  const step = (name) => {
+    for (const k in steps) for (const el of steps[k]) el.hidden = k !== name;
+    $('#stepNo').textContent = { name: 'step 1 / 2', check: 'step 2 / 2', done: 'inside' }[name];
+  };
   let found = null;
 
   function enter() {
@@ -893,7 +890,6 @@ html.entered .stub { padding: .6rem 1.6rem .75rem; }
 
   nameInput.addEventListener('input', () => {
     nameErr.textContent = '';
-    replay(ticket, 'strike');
     sound.key();
   });
 
@@ -952,12 +948,132 @@ html.entered .stub { padding: .6rem 1.6rem .75rem; }
     stamp.classList.add('hit');
     setTimeout(() => { sound.thud(); root.classList.add('quake'); }, 180);
     setTimeout(() => root.classList.remove('quake'), 1100);
-    setTimeout(() => {
+    const reveal = () => {
       $('#inName').textContent = found.displayName;
       step('done');
-      ticket.classList.add('torn');
-    }, 1400);
+    };
+    if (reduce.matches) { setTimeout(reveal, 900); return; }
+    setTimeout(() => engulf(photo, reveal), 650);
   });
+
+  /* ---------- venom takeover: black goo erupts from an element, swallows the screen, then pulls back ---------- */
+  const venomG = $('#venomBlobs');
+  function engulf(fromEl, whileCovered) {
+    const r = fromEl.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const far = Math.max(...[[0, 0], [innerWidth, 0], [0, innerHeight], [innerWidth, innerHeight]]
+      .map(([x, y]) => Math.hypot(x - cx, y - cy))) * 1.1;
+    venomG.replaceChildren();
+    const blob = (a, d, r0, r1, delay) => {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      venomG.appendChild(c);
+      return { c, a, d, r0, r1, delay };
+    };
+    // tendrils shoot out first, the core swells after them and covers everything
+    const blobs = [blob(0, 0, r.width * .3, far, .2)];
+    for (let i = 0; i < 18; i++) {
+      blobs.push(blob(i / 18 * Math.PI * 2 + Math.random() * .3, far * (.3 + Math.random() * .45), 6, 26 + Math.random() * 70, Math.random() * .12));
+    }
+    sound.thud();
+    const IN = 1, HOLD = .3, OUT = .95;
+    const ease = (x) => 1 - Math.pow(1 - x, 3);
+    const t0 = performance.now();
+    let covered = false;
+    function f(now) {
+      const t = (now - t0) / 1000;
+      let k;
+      if (t < IN) k = t / IN;
+      else if (t < IN + HOLD) {
+        k = 1;
+        if (!covered) { covered = true; whileCovered(); }
+      } else k = Math.max(0, 1 - (t - IN - HOLD) / OUT);
+      for (const b of blobs) {
+        const p = ease(Math.max(0, Math.min(1, (k - b.delay) / (1 - b.delay))));
+        b.c.setAttribute('cx', (cx + Math.cos(b.a) * b.d * p).toFixed(1));
+        b.c.setAttribute('cy', (cy + Math.sin(b.a) * b.d * p).toFixed(1));
+        b.c.setAttribute('r', (p > 0 ? b.r0 + (b.r1 - b.r0) * p : 0).toFixed(1));
+      }
+      if (t < IN + HOLD + OUT) requestAnimationFrame(f);
+      else venomG.replaceChildren();
+    }
+    requestAnimationFrame(f);
+  }
+
+  /* ---------- tar dripping off the bottom of the card; the tarBlobs stretch towards the pointer ---------- */
+  const card = $('.card'), tar = $('#tar'), tarBase = $('#tarBase'), tarDrips = $('#tarDrips');
+  const tarBlobs = [];
+  let tarW = 0, tarPtr = null, tarLast = performance.now();
+  function layoutTar() {
+    tarW = card.clientWidth;
+    tarBase.setAttribute('x', 18);
+    tarBase.setAttribute('y', -2);
+    tarBase.setAttribute('width', Math.max(0, tarW - 36));
+    tarBase.setAttribute('height', 6);
+    tarBase.setAttribute('rx', 3);
+    tarDrips.replaceChildren();
+    tarBlobs.length = 0;
+    const n = Math.max(5, Math.round(tarW / 46));
+    for (let i = 0; i < n; i++) {
+      const mk = (tag) => tarDrips.appendChild(document.createElementNS('http://www.w3.org/2000/svg', tag));
+      const line = mk('line'), tip = mk('circle'), drop = mk('circle');
+      const w = 3 + Math.random() * 4;
+      line.setAttribute('stroke-width', w.toFixed(1));
+      line.setAttribute('stroke-linecap', 'round');
+      tarBlobs.push({ x: 26 + (tarW - 52) * (i + .2 + Math.random() * .6) / n, w, len: Math.random() * 10, base: 6 + Math.random() * 22,
+        ph: Math.random() * 6, sp: .5 + Math.random(), lean: 0, dy: -1, dv: 0, line, tip, drop });
+    }
+  }
+  addEventListener('pointermove', (e) => { tarPtr = [e.clientX, e.clientY]; }, { passive: true });
+  // typing makes the tar twitch
+  nameInput.addEventListener('input', () => { for (const d of tarBlobs) d.len += 5 + Math.random() * 9; });
+  function tarFrame(now) {
+    requestAnimationFrame(tarFrame);
+    const dt = Math.min(.05, (now - tarLast) / 1000);
+    tarLast = now;
+    if (gate.hidden || reduce.matches) return;
+    if (card.clientWidth !== tarW) layoutTar();
+    const box = tar.getBoundingClientRect();
+    for (const d of tarBlobs) {
+      let want = d.base * (1 + .25 * Math.sin(now / 1000 * d.sp + d.ph)), lean = 0;
+      if (tarPtr) {
+        const px = tarPtr[0] - box.left, py = tarPtr[1] - box.top, near = Math.abs(px - d.x);
+        if (py > 0 && py < 180 && near < 90) {
+          const pull = 1 - near / 90;
+          want = Math.min(155, py - 6) * pull + want * (1 - pull);
+          lean = (px - d.x) * .45 * pull;
+        }
+      }
+      d.len += (want - d.len) * Math.min(1, dt * 4);
+      d.lean += (lean - d.lean) * Math.min(1, dt * 5);
+      // a heavy drip lets go of a drop now and then
+      if (d.dy < 0 && d.len > d.base * 1.15 && Math.random() < dt * .25) {
+        d.dy = d.len;
+        d.dv = 0;
+        d.len *= .55;
+      }
+      const tx = d.x + d.lean, ty = Math.max(0, d.len);
+      d.line.setAttribute('x1', d.x.toFixed(1));
+      d.line.setAttribute('y1', '0');
+      d.line.setAttribute('x2', tx.toFixed(1));
+      d.line.setAttribute('y2', ty.toFixed(1));
+      d.tip.setAttribute('cx', tx.toFixed(1));
+      d.tip.setAttribute('cy', ty.toFixed(1));
+      d.tip.setAttribute('r', (d.w * .85).toFixed(1));
+      if (d.dy >= 0) {
+        d.dv += 600 * dt;
+        d.dy += d.dv * dt;
+        d.drop.setAttribute('cx', d.x.toFixed(1));
+        d.drop.setAttribute('cy', d.dy.toFixed(1));
+        d.drop.setAttribute('r', (d.w * .8).toFixed(1));
+        d.drop.setAttribute('opacity', Math.max(0, Math.min(1, 1 - (d.dy - 100) / 60)).toFixed(2));
+        if (d.dy > 160) {
+          d.dy = -1;
+          d.drop.setAttribute('r', '0');
+        }
+      }
+    }
+  }
+  requestAnimationFrame(tarFrame);
   /* ---------- the arm ---------- */
   const NS = 'http://www.w3.org/2000/svg';
   const mk = (parent, tag, cls) => {
