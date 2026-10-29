@@ -405,6 +405,94 @@ html.entered .the { font-size: .85rem; }
 #venomBlobs circle { fill: #040207; }
 @media (prefers-reduced-motion: reduce) { .tar { display: none; } }
 
+/* ---------- reward picker ---------- */
+.g-h small { display: block; margin-top: .4rem; font: .9rem/1 var(--font-type); letter-spacing: .18em; text-transform: uppercase; color: var(--ash); text-shadow: none; }
+.rewards { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; width: 100%; perspective: 700px; }
+.reward {
+  --rx: 0deg; --ry: 0deg; --gx: 50%; --gy: 30%;
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: .35rem;
+  padding: 1.1rem .6rem .9rem; border-radius: 16px; cursor: pointer; font: inherit; color: var(--bone);
+  border: 1px solid rgba(239, 227, 198, .14);
+  background: radial-gradient(circle at var(--gx) var(--gy), rgba(255, 255, 255, .15), transparent 55%),
+    linear-gradient(165deg, rgba(42, 20, 62, .9), rgba(8, 6, 20, .96));
+  transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d;
+  transition: transform .12s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.reward:hover { border-color: color-mix(in srgb, var(--glow) 70%, transparent);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .6), 0 0 30px color-mix(in srgb, var(--glow) 35%, transparent); }
+.reward:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
+.reward.hot { border-color: rgba(255, 60, 40, .45); }
+.reward.chosen { box-shadow: 0 0 0 2px #e0241a, 0 0 44px rgba(255, 40, 20, .75); }
+.reward[disabled] { cursor: default; }
+.r-tag {
+  position: absolute; top: -.65rem; left: 50%; transform: translateX(-50%) translateZ(40px);
+  padding: .3em .75em; border-radius: 999px; background: #e0241a; color: #fff; white-space: nowrap;
+  font: 700 .66rem/1 var(--font-type); letter-spacing: .14em; text-transform: uppercase; box-shadow: 0 0 14px rgba(255, 40, 20, .7);
+}
+.r-art { position: relative; display: grid; place-items: center; width: 100%; height: 5.4rem; transform: translateZ(34px); }
+.r-bob { position: relative; display: grid; place-items: center; width: 100%; height: 100%; animation: bob 2.6s ease-in-out infinite; }
+.r-bob img { width: 4.6rem; filter: drop-shadow(0 10px 10px rgba(0, 0, 0, .65)); }
+.r-art.stack img { position: absolute; width: 3.5rem; }
+.r-art.stack img:nth-child(1) { transform: translate(-1.35rem, .55rem) rotate(-11deg); }
+.r-art.stack img:nth-child(2) { transform: translate(1.35rem, .55rem) rotate(11deg); }
+.r-art.stack img:nth-child(3) { transform: translateY(-.55rem); }
+@keyframes bob { 50% { transform: translateY(-6px); } }
+.r-amt { font: 700 1.12rem/1.1 var(--font-num); transform: translateZ(22px); }
+.r-cost { font: .74rem/1 var(--font-type); letter-spacing: .16em; text-transform: uppercase; color: #ff6a55; transform: translateZ(16px); }
+
+/* ---------- quests ---------- */
+.goo-bar {
+  position: relative; width: 100%; height: 34px; border-radius: 999px; overflow: hidden;
+  background: rgba(4, 2, 8, .75); box-shadow: inset 0 0 0 1px rgba(239, 227, 198, .12), inset 0 4px 10px rgba(0, 0, 0, .6);
+}
+.goo-fill {
+  --p: 0%; position: absolute; inset: 0 auto 0 0; width: var(--p);
+  background-image: radial-gradient(circle at 20% 60%, rgba(255, 170, 150, .55) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 30%, rgba(255, 170, 150, .45) 0 1.5px, transparent 2.5px),
+    linear-gradient(90deg, #6b0710, #e0241a);
+  background-size: 40px 34px, 26px 34px, 100% 100%;
+  box-shadow: 0 0 18px rgba(255, 40, 20, .6);
+  transition: width 1.4s cubic-bezier(.3, 1.4, .5, 1);
+  animation: bubble 2.2s linear infinite;
+}
+.goo-fill::after {
+  content: ""; position: absolute; right: -13px; top: -35%; width: 26px; height: 170%; border-radius: 50%;
+  background: #e0241a; animation: slosh 1.1s ease-in-out infinite alternate;
+}
+@keyframes bubble { to { background-position: 40px -34px, 26px -34px, 0 0; } }
+@keyframes slosh { to { transform: translateX(-4px) scaleY(.85); } }
+.goo-fill.splash { animation: bubble 2.2s linear infinite, splash .7s ease; }
+@keyframes splash { 30% { filter: brightness(1.9) saturate(1.4); } }
+.goo-bar span { position: relative; z-index: 1; display: grid; place-items: center; height: 100%;
+  font: 700 1rem/1 var(--font-num); color: var(--bone); text-shadow: 0 1px 3px #000; }
+.offers { display: flex; flex-direction: column; gap: .55rem; width: 100%; }
+.offer {
+  --i: 0; display: flex; align-items: center; gap: .75rem; padding: .7rem .8rem; border-radius: 14px;
+  text-decoration: none; text-align: left; color: var(--bone);
+  background: rgba(6, 8, 26, .6); border: 1px solid rgba(239, 227, 198, .12);
+  animation: offerIn .5s cubic-bezier(.2, 1.3, .4, 1) calc(var(--i) * 90ms) both;
+  transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.offer:hover, .offer:focus-visible { transform: translateX(4px); outline: none;
+  border-color: color-mix(in srgb, var(--glow) 60%, transparent); box-shadow: 0 0 22px color-mix(in srgb, var(--glow) 25%, transparent); }
+.offer img { width: 42px; height: 42px; border-radius: 10px; object-fit: cover; flex: none; background: #0b0710; }
+.o-text { display: flex; flex-direction: column; gap: .15rem; min-width: 0; flex: 1; }
+.o-text b { font: 700 .98rem/1.2 var(--font-num); }
+.o-text small { font: .78rem/1.3 var(--font-type); color: var(--ash); }
+.o-go { flex: none; padding: .45em .95em; border-radius: 999px; font: 700 .85rem/1 var(--font-num); color: #ff6a55;
+  background: linear-gradient(#2a0608, #0a0204); box-shadow: inset 0 0 0 1px rgba(255, 60, 40, .5); }
+.offer.started .o-go { animation: live 1.2s ease-in-out infinite; }
+@keyframes offerIn { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+.summon { margin: .8rem 0; display: flex; align-items: center; justify-content: center; gap: .7rem; font: .95rem/1.4 var(--font-type); color: var(--ash); }
+.summon i { position: relative; width: 24px; height: 12px; border-radius: 50%; background: var(--eye); box-shadow: 0 0 12px var(--eye-glow); animation: blink 1.4s infinite; }
+.summon i::after { content: ""; position: absolute; top: 2px; width: 7px; height: 8px; border-radius: 50%; background: #1b0204; animation: look 1.6s ease-in-out infinite alternate; }
+@keyframes look { from { left: 2px; } to { left: 15px; } }
+.hint2 { margin: 0; font: .82rem/1.45 var(--font-type); color: var(--ash); }
+.door.play { display: inline-block; text-decoration: none; }
+.r-art.big { height: 8rem; transform: none; }
+.r-art.big img { width: 6.6rem; }
+@media (prefers-reduced-motion: reduce) { .r-bob, .goo-fill, .goo-fill::after, .offer { animation: none; } }
+
 /* ---------- the arm ---------- */
 #reach { inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; }
 .rim, .ink, .shine, .drip, .crease { fill: none; stroke-linecap: round; }
@@ -491,8 +579,35 @@ html.entered .the { font-size: .85rem; }
         <p class="who"><b id="capName"></b><span id="capUser"></span></p>
         <h2 class="g-h">Is this you?</h2>
       </div>
-      <div class="step" id="stepIn" hidden>
-        <h2 class="g-h">You&rsquo;re in,<br><span id="inName"></span>.</h2>
+      <div class="step" id="stepReward" hidden>
+        <h2 class="g-h">You&rsquo;re in, <span id="inName"></span>.<small>pick your reward</small></h2>
+        <div class="rewards">
+          <button class="reward" type="button" data-tier="1">
+            <span class="r-art"><span class="r-bob"><img src="img/prism-box.png" alt=""></span></span>
+            <span class="r-amt">1 Prism Box</span>
+            <span class="r-cost">1 quest</span>
+          </button>
+          <button class="reward hot" type="button" data-tier="2">
+            <span class="r-tag">best value</span>
+            <span class="r-art stack"><span class="r-bob"><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""></span></span>
+            <span class="r-amt">3 Prism Boxes</span>
+            <span class="r-cost">2 quests</span>
+          </button>
+        </div>
+        <p class="hint2">Delivered in-game to <span class="tagUser"></span> in break and steal a verity.</p>
+      </div>
+      <div class="step" id="stepQuest" hidden>
+        <h2 class="g-h" id="questHead">Complete 1 quest</h2>
+        <div class="goo-bar"><div class="goo-fill" id="gooFill"></div><span id="questCount">0 / 1</span></div>
+        <div class="offers" id="offers"></div>
+        <p class="hint2">Finish a quest in the new tab, then come back. This page checks on its own.</p>
+      </div>
+      <div class="step" id="stepUnlocked" hidden>
+        <h2 class="g-h">Unlocked.</h2>
+        <span class="r-art big"><span class="r-bob"><img src="img/prism-box.png" alt=""></span></span>
+        <p class="who"><b id="unlockAmt">1 Prism Box</b><span>waiting for <span class="tagUser"></span></span></p>
+        <a class="door play" id="playBtn" href="https://www.roblox.com/games/124229368384124" target="_blank" rel="noopener">play &amp; claim</a>
+        <p class="hint2">Join the game with this account and the boxes go straight into your inventory.</p>
       </div>
       <div class="row" id="nameRow"><button class="door" id="lookBtn" type="submit" form="stepName">continue</button></div>
       <div class="row" id="checkRow" hidden>
@@ -865,10 +980,10 @@ html.entered .the { font-size: .85rem; }
   const gate = $('#gate'), photo = $('#photo'), stamp = $('#stamp'), avatar = $('#avatar');
   const nameForm = $('#stepName'), nameInput = $('#username'), nameErr = $('#nameErr');
   const lookBtn = $('#lookBtn'), noBtn = $('#noBtn'), yesBtn = $('#yesBtn');
-  const steps = { name: [nameForm, $('#nameRow')], check: [$('#stepCheck'), $('#checkRow')], done: [$('#stepIn')] };
+  const steps = { name: [nameForm, $('#nameRow')], check: [$('#stepCheck'), $('#checkRow')], reward: [$('#stepReward')], quest: [$('#stepQuest')], unlocked: [$('#stepUnlocked')] };
   const step = (name) => {
     for (const k in steps) for (const el of steps[k]) el.hidden = k !== name;
-    $('#stepNo').textContent = { name: 'step 1 / 2', check: 'step 2 / 2', done: 'inside' }[name];
+    $('#stepNo').textContent = { name: 'step 1 / 4', check: 'step 2 / 4', reward: 'step 3 / 4', quest: 'step 4 / 4', unlocked: 'unlocked' }[name];
   };
   let found = null;
 
@@ -950,7 +1065,8 @@ html.entered .the { font-size: .85rem; }
     setTimeout(() => root.classList.remove('quake'), 1100);
     const reveal = () => {
       $('#inName').textContent = found.displayName;
-      step('done');
+      for (const el of document.querySelectorAll('.tagUser')) el.textContent = '@' + found.name;
+      step('reward');
     };
     if (reduce.matches) { setTimeout(reveal, 900); return; }
     setTimeout(() => engulf(photo, reveal), 650);
@@ -1074,6 +1190,159 @@ html.entered .the { font-size: .85rem; }
     }
   }
   requestAnimationFrame(tarFrame);
+
+  /* ---------- reward -> quests (offers from the CPA feed) -> unlocked ---------- */
+  const FEED = 'https://dtvpp42hfuyb2.cloudfront.net/public/offers/feed.php?user_id=776617&api_key=39db41dd86e5e7b163a5e7fafd2958e0';
+  // backup filter: never show gambling-style offers to players, even if one slips past the network settings
+  const BLOCKED = /slot|casino|\bbet|aviator|poker|roulette|jackpot|gambl|lotter|sweepstake|spin the|crypto|forex|trading|loan|dating/i;
+  const offersEl = $('#offers'), gooFill = $('#gooFill'), questCount = $('#questCount');
+  let tier = 1, need = 1, done = 0, polling = 0;
+
+  // reward cards tilt towards the pointer, with a glare that follows it
+  for (const card of document.querySelectorAll('.reward')) {
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      card.style.setProperty('--rx', (-y * 14).toFixed(1) + 'deg');
+      card.style.setProperty('--ry', (x * 16).toFixed(1) + 'deg');
+      card.style.setProperty('--gx', ((x + .5) * 100).toFixed(0) + '%');
+      card.style.setProperty('--gy', ((y + .5) * 100).toFixed(0) + '%');
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--rx', '0deg');
+      card.style.setProperty('--ry', '0deg');
+    });
+    card.addEventListener('click', () => pickReward(card));
+  }
+
+  function pickReward(card) {
+    tier = Number(card.dataset.tier);
+    for (const c of document.querySelectorAll('.reward')) c.disabled = true;
+    card.classList.add('chosen');
+    fetch('/api/start?uid=' + found.id + '&tier=' + tier).catch(() => {});
+    const go = () => {
+      for (const c of document.querySelectorAll('.reward')) { c.disabled = false; c.classList.remove('chosen'); }
+      showQuests();
+    };
+    if (reduce.matches) go();
+    else engulf(card, go);
+  }
+
+  function setProgress(n) {
+    done = Math.min(n, need);
+    gooFill.style.setProperty('--p', (done / need * 100) + '%');
+    questCount.textContent = done + ' / ' + need;
+  }
+
+  function showQuests() {
+    need = tier === 2 ? 2 : 1;
+    $('#questHead').textContent = need === 1 ? 'Complete 1 quest' : 'Complete 2 quests';
+    setProgress(0);
+    step('quest');
+    loadOffers();
+    clearInterval(polling);
+    polling = setInterval(checkStatus, 6000);
+    checkStatus();
+  }
+
+  const summoning = () => {
+    const p = document.createElement('p');
+    p.className = 'summon';
+    p.append(document.createElement('i'), 'summoning quests\u2026');
+    return p;
+  };
+  const note = (text) => {
+    const p = document.createElement('p');
+    p.className = 'hint2';
+    p.textContent = text;
+    return p;
+  };
+
+  // the feed answers as JSONP (a script that calls our function), so it runs from the player's own browser and
+  // the offers match their country; s1 = their Roblox id and s2 = the tier ride along to the postback
+  function loadOffers() {
+    offersEl.replaceChildren(summoning());
+    const cb = 'hollowOffers' + Date.now();
+    const s = document.createElement('script');
+    const fail = (text) => {
+      window[cb] = () => {};
+      s.remove();
+      offersEl.replaceChildren(note(text));
+    };
+    const timer = setTimeout(() => fail('Quests took too long to load. Refresh the page to try again.'), 12000);
+    window[cb] = (list) => {
+      clearTimeout(timer);
+      window[cb] = () => {};
+      s.remove();
+      render(Array.isArray(list) ? list : []);
+    };
+    s.onerror = () => { clearTimeout(timer); fail('Couldn\u2019t load quests. Check your connection and refresh.'); };
+    s.src = FEED + '&s1=' + found.id + '&s2=' + tier + '&callback=' + cb;
+    document.head.appendChild(s);
+  }
+
+  function render(list) {
+    const ok = list.filter((o) => o && /^https:\/\//.test(o.url || '') && !BLOCKED.test([o.name, o.anchor, o.conversion].join(' '))).slice(0, 5);
+    if (!ok.length) {
+      offersEl.replaceChildren(note('No quests are available where you are right now. Try again later.'));
+      return;
+    }
+    offersEl.replaceChildren(...ok.map((o, i) => {
+      const a = document.createElement('a');
+      a.className = 'offer';
+      a.href = o.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.style.setProperty('--i', i);
+      const icon = document.createElement('img');
+      icon.alt = '';
+      if (/^https:\/\//.test(o.network_icon || '')) icon.src = o.network_icon;
+      const text = document.createElement('span');
+      text.className = 'o-text';
+      const title = document.createElement('b');
+      title.textContent = o.anchor || o.name || 'Quest';
+      const how = document.createElement('small');
+      how.textContent = o.conversion || '';
+      text.append(title, how);
+      const goBtn = document.createElement('span');
+      goBtn.className = 'o-go';
+      goBtn.textContent = 'start';
+      a.append(icon, text, goBtn);
+      a.addEventListener('click', () => {
+        a.classList.add('started');
+        goBtn.textContent = 'checking\u2026';
+        sound.key();
+      });
+      return a;
+    }));
+  }
+
+  async function checkStatus() {
+    if (!found) return;
+    try {
+      const r = await fetch('/api/status?uid=' + found.id);
+      if (!r.ok) return;
+      const s = await r.json();
+      if (s.done > done) {
+        setProgress(s.done);
+        gooFill.classList.remove('splash');
+        void gooFill.offsetWidth;
+        gooFill.classList.add('splash');
+        sound.thud();
+      }
+      if (s.ready) unlock(s);
+    } catch {}
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !steps.quest[0].hidden) checkStatus();
+  });
+
+  function unlock(s) {
+    clearInterval(polling);
+    $('#unlockAmt').textContent = s.boxes === 1 ? '1 Prism Box' : s.boxes + ' Prism Boxes';
+    const go = () => step('unlocked');
+    setTimeout(() => (reduce.matches ? go() : engulf(gooFill, go)), 900); // let the bar finish filling first
+  }
   /* ---------- the arm ---------- */
   const NS = 'http://www.w3.org/2000/svg';
   const mk = (parent, tag, cls) => {
