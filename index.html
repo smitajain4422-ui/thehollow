@@ -223,24 +223,47 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
   transition: color 1.2s ease;
 }
 
+.sound-control {
+  position: fixed; z-index: 30;
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  right: max(10px, env(safe-area-inset-right, 0px));
+  display: flex; align-items: center; gap: 10px;
+}
 .sound {
-  position: fixed; z-index: 7;
-  top: calc(14px + env(safe-area-inset-top, 0px));
-  right: max(16px, env(safe-area-inset-right, 0px));
-  width: 44px; height: 44px; padding: 0;
+  position: relative; z-index: 2;
+  width: 52px; height: 52px; flex: 0 0 52px; padding: 0;
   display: grid; place-items: center;
   border-radius: 50%; border: 1px solid var(--faint);
-  background: rgba(6, 8, 26, .55); color: var(--bone);
-  cursor: pointer;
-  transition: box-shadow .2s ease;
+  background: rgba(6, 8, 26, .72); color: var(--bone);
+  cursor: pointer; touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow .2s ease, border-color .2s ease;
 }
-.sound:hover { box-shadow: 0 0 18px color-mix(in srgb, var(--glow) 45%, transparent); }
+.sound:hover { box-shadow: 0 0 18px color-mix(in srgb, var(--glow) 55%, transparent); border-color: rgba(239,227,198,.7); }
 .sound:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
-.sound svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sound svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .sound .spk { fill: currentColor; }
 .sound .wave { display: none; }
 .sound[aria-pressed="true"] .wave { display: inline; }
 .sound[aria-pressed="true"] .mute { display: none; }
+.sound-volume {
+  width: 0; max-width: min(34vw, 150px); height: 24px; padding: 0;
+  opacity: 0; pointer-events: none; overflow: hidden;
+  appearance: none; -webkit-appearance: none;
+  background: transparent; cursor: pointer;
+  transition: width .22s ease, opacity .18s ease;
+  accent-color: var(--ember);
+  touch-action: pan-y;
+}
+.sound-control.open .sound-volume { width: clamp(88px, 18vw, 132px); opacity: 1; pointer-events: auto; }
+.sound-volume::-webkit-slider-runnable-track { height: 5px; border-radius: 99px; background: linear-gradient(90deg, var(--ember), rgba(239,227,198,.45)); box-shadow: 0 0 8px rgba(255,59,31,.25); }
+.sound-volume::-moz-range-track { height: 5px; border-radius: 99px; background: linear-gradient(90deg, var(--ember), rgba(239,227,198,.45)); box-shadow: 0 0 8px rgba(255,59,31,.25); }
+.sound-volume::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 17px; height: 17px; margin-top: -6px; border: 0; border-radius: 50%; background: var(--ember); box-shadow: 0 0 0 3px rgba(255,59,31,.16), 0 0 12px rgba(255,59,31,.7); }
+.sound-volume::-moz-range-thumb { width: 17px; height: 17px; border: 0; border-radius: 50%; background: var(--ember); box-shadow: 0 0 0 3px rgba(255,59,31,.16), 0 0 12px rgba(255,59,31,.7); }
+@media (max-width: 420px) {
+  .sound-control { right: max(8px, env(safe-area-inset-right, 0px)); }
+  .sound-control.open .sound-volume { width: clamp(82px, 27vw, 112px); }
+}
 
 .back-btn {
   position: fixed; z-index: 7;
@@ -308,7 +331,20 @@ html.quake .stage { animation: quake .45s steps(3) 2; }
 .blackout.red { background: #6b0007; }
 .blackout.red.run { animation: redflash 1s linear; }
 @keyframes redflash { 0% { opacity: 0; } 8% { opacity: .75; } 20% { opacity: .1; } 32% { opacity: .6; } 100% { opacity: 0; } }
-.door.open { animation: beckon 1.8s ease-in-out infinite; }
+.door.open {
+  min-width: clamp(176px, 24vw, 220px);
+  padding: 1.12em 2.65em 1.16em;
+  border: 1px solid rgba(239, 204, 151, .38);
+  background:
+    radial-gradient(120% 140% at 28% 0%, rgba(255,255,255,.2), transparent 42%),
+    linear-gradient(180deg, #302027 0%, #16080d 48%, #050306 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.24), inset 0 -8px 16px rgba(0,0,0,.8),
+    0 0 0 1px rgba(0,0,0,.9), 0 12px 28px rgba(0,0,0,.62),
+    0 0 28px rgba(255,55,28,.36), 0 0 58px rgba(200,18,15,.28);
+  text-shadow: 0 1px 2px #000, 0 0 12px rgba(239,227,198,.22);
+  animation: beckon 1.8s ease-in-out infinite;
+}
+.door.open:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.25), inset 0 -8px 16px rgba(0,0,0,.8), 0 12px 28px rgba(0,0,0,.62), 0 0 38px rgba(255,55,28,.55), 0 0 72px rgba(200,18,15,.4); }
 @keyframes beckon { 50% { filter: drop-shadow(0 0 18px rgba(255, 40, 20, .9)); transform: scale(1.04); } }
 
 /* eyes in the woods have pupils that follow the pointer */
@@ -736,9 +772,12 @@ html.entered .the { font-size: .85rem; }
   </section>
 </main>
 
-<button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Turn sound on">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M3 9h4l5-4v14l-5-4H3z"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M16 9l5 6M21 9l-5 6"/></svg>
-</button>
+<div class="sound-control" id="soundControl">
+  <input class="sound-volume" id="soundVolume" type="range" min="0" max="100" step="1" value="65" aria-label="Sound volume" title="Sound volume">
+  <button class="sound" id="sound" type="button" aria-pressed="true" aria-label="Show volume control" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M3 9h4l5-4v14l-5-4H3z"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M16 9l5 6M21 9l-5 6"/></svg>
+  </button>
+</div>
 
 <svg id="reach" aria-hidden="true" focusable="false">
   <defs>
@@ -914,8 +953,8 @@ html.entered .the { font-size: .85rem; }
   }, { passive: true });
   /* ---------- sound: all made in code, and it only starts after a click ---------- */
   const sound = (() => {
-    const btn = $('#sound');
-    let ac = null, master = null, noise = null, on = false, lastGrab = 0;
+    const btn = $('#sound'), control = $('#soundControl'), volumeInput = $('#soundVolume');
+    let ac = null, master = null, noise = null, on = true, volume = 0.65, lastGrab = 0;
     const music = new Audio('bgm.mp3');
     music.loop = true;
     music.preload = 'none';
@@ -930,7 +969,7 @@ html.entered .the { font-size: .85rem; }
 
     function start() {
       ac = new (window.AudioContext || window.webkitAudioContext)();
-      master = gain(.0001);
+      master = gain(.9 * volume);
       master.connect(ac.destination);
       noise = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate);
       const data = noise.getChannelData(0);
@@ -940,22 +979,50 @@ html.entered .the { font-size: .85rem; }
       ac.createMediaElementSource(music).connect(gain(.35)).connect(master);
     }
 
-    function set(v) {
-      on = v;
-      if (on && !ac) start();
+    function applyVolume() {
+      volume = Number(volumeInput.value) / 100;
+      on = volume > 0;
+      if (!ac) start();
       if (ac) {
-        ac.resume();
         const t = ac.currentTime;
         master.gain.cancelScheduledValues(t);
-        master.gain.setValueAtTime(Math.max(master.gain.value, .0001), t);
-        master.gain.exponentialRampToValueAtTime(on ? .9 : .0001, t + (on ? 1.2 : .3));
+        master.gain.setTargetAtTime(on ? .9 * volume : .0001, t, .035);
       }
-      if (on) music.play().catch(() => {});
-      else setTimeout(() => { if (!on) music.pause(); }, 350);
+      if (on) {
+        music.volume = 1;
+        if (ac && ac.state === 'suspended') ac.resume().catch(() => {});
+        music.play().catch(() => {});
+      } else {
+        music.pause();
+      }
       btn.setAttribute('aria-pressed', String(on));
-      btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+      btn.setAttribute('aria-label', 'Show volume control');
     }
-    btn.addEventListener('click', () => set(!on));
+    btn.addEventListener('click', () => {
+      const open = control.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    volumeInput.addEventListener('input', applyVolume);
+    volumeInput.addEventListener('wheel', (ev) => {
+      ev.preventDefault();
+      const delta = ev.deltaY > 0 ? 5 : -5;
+      volumeInput.value = String(Math.max(0, Math.min(100, Number(volumeInput.value) + delta)));
+      applyVolume();
+    }, { passive: false });
+    // Browsers may block autoplay; resume on the first real visitor interaction.
+    const wakeAudio = () => {
+      if (!on) return;
+      if (!ac) start();
+      if (ac && ac.state === 'suspended') ac.resume().catch(() => {});
+      if (music.paused) music.play().catch(() => {});
+    };
+    window.addEventListener('pointerdown', wakeAudio, { once: true, passive: true });
+    window.addEventListener('keydown', wakeAudio, { once: true });
+    // Try autoplay immediately; browsers that prohibit it are handled by wakeAudio.
+    start();
+    music.volume = 1;
+    music.play().catch(() => {});
+    if (ac && ac.state === 'suspended') ac.resume().catch(() => {});
 
     function door(goingIn) {
       if (!on) return;
