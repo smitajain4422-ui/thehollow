@@ -493,6 +493,84 @@ html.entered .the { font-size: .85rem; }
 .r-art.big img { width: 6.6rem; }
 @media (prefers-reduced-motion: reduce) { .r-bob, .goo-fill, .goo-fill::after, .offer { animation: none; } }
 
+/* ---------- entry card: bigger, solid, no glow (overrides the rules above) ---------- */
+.door {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), inset 0 -7px 14px rgba(0, 0, 0, .85),
+    0 0 0 1px rgba(0, 0, 0, .9), 0 12px 26px rgba(0, 0, 0, .6);
+}
+.door:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), inset 0 -7px 14px rgba(0, 0, 0, .85),
+    0 0 0 1px rgba(0, 0, 0, .9), 0 16px 30px rgba(0, 0, 0, .7);
+  transform: translateY(-1px);
+}
+@keyframes beckon { 50% { transform: scale(1.05); } }
+.gate { width: min(100%, 36rem); }
+.card {
+  gap: 1.4rem; padding: 1.4rem 2.2rem 2.2rem; border-radius: 18px;
+  border: 1px solid rgba(239, 227, 198, .14);
+  background: linear-gradient(180deg, #15172d 0%, #0b0a16 100%);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, .75);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.card::before { display: none; }
+.card-top { padding-bottom: 1rem; font: 600 1rem/1 var(--font-num); letter-spacing: .01em; text-transform: none; color: var(--ash); }
+.live i { box-shadow: none; }
+.g-h { font-size: clamp(2.4rem, 6vw, 3.3rem); text-shadow: none; }
+.g-h small { margin-top: .7rem; font: 1.15rem/1.35 var(--font-type); letter-spacing: 0; text-transform: none; }
+.g-lbl { font: 1.05rem/1.3 var(--font-type); letter-spacing: 0; text-transform: none; }
+#username { padding: .95em 1.1em; border-radius: 14px; font-size: 1.55rem; background: #08070f; }
+#username:focus { border-color: #b3140f; box-shadow: none; }
+.err { font-size: 1.05rem; }
+.hint2 { font-size: 1.02rem; line-height: 1.5; }
+.photo { width: 13.5rem; background: #0b0a17; box-shadow: 0 0 0 3px #22223a, 0 22px 44px rgba(0, 0, 0, .6); }
+.stamp { text-shadow: none; }
+.who b { font-size: 1.9rem; }
+.who span { font-size: 1.1rem; }
+.gate .row .door { font-size: 1.25rem; padding: .95em 1.8em 1em; }
+.rewards { gap: 1.1rem; }
+.reward { padding: 1.7rem 1rem 1.4rem; background: linear-gradient(180deg, #1e1931 0%, #0d0b18 100%); }
+.reward:hover { border-color: rgba(239, 227, 198, .38); box-shadow: 0 26px 50px rgba(0, 0, 0, .65); }
+.reward.hot { border: 2px solid #9e130e; }
+.reward.chosen { box-shadow: 0 0 0 3px #c8120f; }
+.r-tag { top: -.85rem; padding: .45em .95em; background: #9e130e; box-shadow: none; font: 700 .9rem/1 var(--font-num); letter-spacing: .01em; text-transform: none; }
+.r-art { height: 8.2rem; }
+.r-bob img { width: 6.8rem; }
+.r-art.stack img { width: 5.2rem; }
+.r-art.stack img:nth-child(1) { transform: translate(-1.9rem, .8rem) rotate(-11deg); }
+.r-art.stack img:nth-child(2) { transform: translate(1.9rem, .8rem) rotate(11deg); }
+.r-art.stack img:nth-child(3) { transform: translateY(-.8rem); }
+.r-amt { font-size: 1.55rem; }
+.r-cost { font: 600 1.1rem/1 var(--font-num); letter-spacing: 0; text-transform: none; color: #e2604c; }
+.goo-bar { height: 46px; }
+.goo-fill { box-shadow: none; }
+.goo-bar span { font-size: 1.25rem; }
+.offers { gap: .7rem; }
+.offer { gap: 1rem; padding: 1rem 1.1rem; background: #121124; }
+.offer:hover, .offer:focus-visible { border-color: rgba(239, 227, 198, .4); box-shadow: 0 14px 30px rgba(0, 0, 0, .5); }
+.offer img { width: 58px; height: 58px; border-radius: 12px; }
+.o-text b { font-size: 1.18rem; }
+.o-text small { font-size: .98rem; }
+.o-go { padding: .65em 1.2em; font-size: 1.02rem; color: #fff; background: #9e130e; box-shadow: none; }
+.summon { font-size: 1.12rem; }
+.summon i { box-shadow: none; }
+.empty { box-sizing: border-box; width: 100%; display: flex; flex-direction: column; align-items: center; gap: .7rem;
+  padding: 1.6rem 1.2rem; border: 1px dashed rgba(239, 227, 198, .22); border-radius: 14px; text-align: center; }
+.empty b { font: 700 1.6rem/1.15 var(--font-num); color: var(--bone); }
+.empty p { margin: 0; font: 1.02rem/1.5 var(--font-type); color: var(--ash); }
+.empty .door { margin-top: .3rem; }
+.r-art.big { height: 10.5rem; }
+.r-art.big img { width: 9.2rem; }
+.tar { filter: none; }
+#venom { filter: drop-shadow(0 0 2px rgba(110, 8, 10, .95)); }
+@media (max-width: 520px) {
+  .card { padding: 1.1rem 1.1rem 1.6rem; }
+  .r-art { height: 6.2rem; }
+  .r-bob img { width: 5rem; }
+  .r-art.stack img { width: 3.8rem; }
+  .r-amt { font-size: 1.2rem; }
+  .gate .row .door { font-size: 1.1rem; padding: .9em 1.3em; }
+}
+
 /* ---------- the arm ---------- */
 #reach { inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; }
 .rim, .ink, .shine, .drip, .crease { fill: none; stroke-linecap: round; }
@@ -564,10 +642,10 @@ html.entered .the { font-size: .85rem; }
     <div class="card">
       <svg class="tar" id="tar" aria-hidden="true" focusable="false"><g filter="url(#gooey)"><rect id="tarBase"></rect><g id="tarDrips"></g></g></svg>
       <span class="peek" aria-hidden="true"><i class="eye"></i><i class="eye"></i></span>
-      <div class="card-top"><span class="live"><i></i>the hollow</span><span id="stepNo">step 1 / 2</span></div>
+      <div class="card-top"><span class="live"><i></i>The Hollow</span><span id="stepNo">Step 1 of 4</span></div>
       <form class="step" id="stepName" novalidate>
         <h2 class="g-h">Who&rsquo;s going in?</h2>
-        <label class="g-lbl" for="username">your Roblox username</label>
+        <label class="g-lbl" for="username">Your Roblox username</label>
         <input id="username" name="username" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="20" placeholder="username">
         <p class="err" id="nameErr" role="alert"></p>
       </form>
@@ -580,7 +658,7 @@ html.entered .the { font-size: .85rem; }
         <h2 class="g-h">Is this you?</h2>
       </div>
       <div class="step" id="stepReward" hidden>
-        <h2 class="g-h">You&rsquo;re in, <span id="inName"></span>.<small>pick your reward</small></h2>
+        <h2 class="g-h">You&rsquo;re in, <span id="inName"></span>.<small>Pick your reward</small></h2>
         <div class="rewards">
           <button class="reward" type="button" data-tier="1">
             <span class="r-art"><span class="r-bob"><img src="img/prism-box.png" alt=""></span></span>
@@ -983,7 +1061,7 @@ html.entered .the { font-size: .85rem; }
   const steps = { name: [nameForm, $('#nameRow')], check: [$('#stepCheck'), $('#checkRow')], reward: [$('#stepReward')], quest: [$('#stepQuest')], unlocked: [$('#stepUnlocked')] };
   const step = (name) => {
     for (const k in steps) for (const el of steps[k]) el.hidden = k !== name;
-    $('#stepNo').textContent = { name: 'step 1 / 4', check: 'step 2 / 4', reward: 'step 3 / 4', quest: 'step 4 / 4', unlocked: 'unlocked' }[name];
+    $('#stepNo').textContent = { name: 'Step 1 of 4', check: 'Step 2 of 4', reward: 'Step 3 of 4', quest: 'Step 4 of 4', unlocked: 'Unlocked' }[name];
   };
   let found = null;
 
@@ -1281,10 +1359,27 @@ html.entered .the { font-size: .85rem; }
     document.head.appendChild(s);
   }
 
+  // no offers for this visitor's country (or every one was filtered out)
+  function emptyState() {
+    const box = document.createElement('div');
+    box.className = 'empty';
+    const title = document.createElement('b');
+    title.textContent = 'The woods are quiet tonight.';
+    const text = document.createElement('p');
+    text.textContent = 'No quests are available in your country right now. Check back soon.';
+    const again = document.createElement('button');
+    again.type = 'button';
+    again.className = 'door ghost';
+    again.textContent = 'try again';
+    again.addEventListener('click', loadOffers);
+    box.append(title, text, again);
+    return box;
+  }
+
   function render(list) {
     const ok = list.filter((o) => o && /^https:\/\//.test(o.url || '') && !BLOCKED.test([o.name, o.anchor, o.conversion].join(' '))).slice(0, 5);
     if (!ok.length) {
-      offersEl.replaceChildren(note('No quests are available where you are right now. Try again later.'));
+      offersEl.replaceChildren(emptyState());
       return;
     }
     offersEl.replaceChildren(...ok.map((o, i) => {
