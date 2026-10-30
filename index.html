@@ -721,7 +721,7 @@ html.entered .the { font-size: .85rem; }
       <span class="sep" aria-hidden="true">:</span>
       <div class="unit"><span class="num" id="s">00</span><span class="lbl">seconds</span></div>
     </div>
-    <p class="until" id="until">until October 31 at 6:00 PM IST</p>
+    <p class="until" id="until">until October 31</p>
   </section>
 
   <div class="door-wrap">
@@ -872,6 +872,20 @@ html.entered .the { font-size: .85rem; }
 
   // Countdown ends October 31, 2026 at 6:00 PM IST (GMT+5:30)
   const target = new Date('2026-10-31T18:00:00+05:30');
+  
+  // Format the target time in user's local timezone
+  const localTime = target.toLocaleTimeString('en-US', { 
+    hour: 'numeric', 
+    minute: '2-digit', 
+    hour12: true, 
+    timeZoneName: 'short' 
+  });
+  const localDate = target.toLocaleDateString('en-US', { 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  const untilLabel = `until ${localDate} at ${localTime}`;
+  
   function tick() {
     const left = Math.max(0, Math.ceil((target - Date.now()) / 1000));
     const parts = {
@@ -890,7 +904,7 @@ html.entered .the { font-size: .85rem; }
       document.dispatchEvent(new Event('hollow:open'));
       return;
     }
-    const label = 'until October 31 at 6:00 PM IST';
+    const label = untilLabel;
     if (untilEl.textContent !== label) untilEl.textContent = label;
     setTimeout(tick, 1000 - (Date.now() % 1000) + 8);
   }
