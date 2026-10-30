@@ -35,7 +35,7 @@
 </script>
 <style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); } body { margin: 0; } [hidden] { display: none !important; }</style><link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@600;800&family=Grenze:wght@600;800&family=Special+Elite&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@600;800&family=Grenze:wght@600;800&family=Special+Elite&family=Rubik:wght@500;600;700;800&display=swap">
 <style>
 /* Layout: one screen. A red-lit clearing in a dead wood; the clock and the door are the only things in it. */
 :root {
@@ -61,6 +61,7 @@
   --font-display: "Grenze Gotisch", "UnifrakturCook", "Old English Text MT", Georgia, serif;
   --font-num: "Grenze", Georgia, "Times New Roman", serif;
   --font-type: "Special Elite", "Courier New", Courier, monospace;
+  --font-ui: "Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: dark;
 }
 html.inside {
@@ -647,6 +648,166 @@ html.entered .the { font-size: .85rem; }
   .gate .row .door { font-size: 1.1rem; padding: .9em 1.3em; }
 }
 
+/* ---------- glow-up: readable UI font, glowing headings, red call-to-action buttons (overrides the rules above) ---------- */
+:root { --cta-hi: #ff6a45; --cta: #e0241a; --cta-lo: #8f0b08; --gold-hi: #fff1c2; --gold: #ffc14d; --text: #e9dfd6; }
+
+/* small text: clear and bright instead of typewriter-grey */
+.hint2, .g-lbl, .err, .who span, .o-text small, .summon, .empty p, .g-h small, #username {
+  font-family: var(--font-ui);
+}
+.hint2 { font-size: .98rem; font-weight: 500; color: var(--text); opacity: .78; text-wrap: balance; }
+.g-lbl { font-weight: 600; font-size: 1rem; color: var(--text); letter-spacing: .01em; }
+.err { font-weight: 600; }
+.who span { font-weight: 500; color: var(--ash); }
+#username { font-weight: 700; font-size: 1.45rem; letter-spacing: .02em; border: 2px solid rgba(239, 227, 198, .16); }
+#username:focus { border-color: var(--cta); box-shadow: 0 0 0 4px rgba(224, 36, 26, .22), 0 0 30px rgba(224, 36, 26, .3); }
+
+/* headings: warm bone-to-ember gradient with a soft red halo */
+.g-h, .empty b {
+  background: linear-gradient(180deg, #fffaf0 0%, #f3e6c8 52%, #e0a37a 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .55)) drop-shadow(0 0 22px rgba(255, 60, 30, .35));
+}
+.g-h small { -webkit-text-fill-color: var(--text); color: var(--text); font-weight: 600; font-size: 1.1rem; opacity: .8; }
+#inName { background: linear-gradient(180deg, #ffb08a, #ff3b24); -webkit-background-clip: text; background-clip: text; }
+
+/* the card glows again: slow red rim + inner light */
+.card {
+  border: 1px solid rgba(255, 90, 60, .18);
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(224, 36, 26, .16), transparent 62%),
+    linear-gradient(180deg, #17183a 0%, #0b0a17 100%);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, .75), 0 0 60px rgba(224, 36, 26, .16), inset 0 1px 0 rgba(255, 255, 255, .07);
+}
+.card::before { display: block; animation-duration: 6s; }
+
+/* header: live dot + step tracker */
+.card-top { color: var(--bone); font-weight: 700; }
+.steps { display: inline-flex; align-items: center; gap: .7rem; }
+.pips { display: inline-flex; gap: 5px; }
+.pips i { width: 18px; height: 5px; border-radius: 99px; background: rgba(239, 227, 198, .16); transition: background .4s ease, box-shadow .4s ease, width .4s ease; }
+.pips i.done { background: #ff5a3c; }
+.pips i.now { width: 28px; background: linear-gradient(90deg, #ff8a5c, #ff2a1a); box-shadow: 0 0 10px rgba(255, 60, 30, .8); }
+#stepNo { color: var(--ash); font-size: .92rem; }
+
+/* every main action is a glossy red button; the "no" choice stays dark so the right one is obvious */
+.gate .door:not(.ghost), .door.open, .door.play, .empty .door {
+  color: #fff; text-shadow: 0 1px 0 rgba(90, 0, 0, .7);
+  background:
+    radial-gradient(120% 140% at 28% 0%, rgba(255, 255, 255, .28) 0%, rgba(255, 255, 255, 0) 42%),
+    linear-gradient(180deg, var(--cta-hi) 0%, var(--cta) 48%, var(--cta-lo) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), inset 0 -5px 12px rgba(70, 0, 0, .55),
+    0 0 0 1px rgba(255, 120, 90, .35), 0 12px 30px rgba(224, 36, 26, .45);
+}
+.gate .door:not(.ghost):hover, .door.open:hover, .door.play:hover, .empty .door:hover {
+  filter: brightness(1.1) saturate(1.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -5px 12px rgba(70, 0, 0, .55),
+    0 0 0 1px rgba(255, 140, 110, .5), 0 16px 40px rgba(255, 50, 30, .6);
+}
+.door.play, #yesBtn { animation: ctaPulse 1.8s ease-out infinite; }
+@keyframes ctaPulse {
+  0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), inset 0 -5px 12px rgba(70, 0, 0, .55), 0 0 0 1px rgba(255, 120, 90, .35), 0 12px 30px rgba(224, 36, 26, .45), 0 0 0 0 rgba(255, 70, 40, .55); }
+  100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), inset 0 -5px 12px rgba(70, 0, 0, .55), 0 0 0 1px rgba(255, 120, 90, .35), 0 12px 30px rgba(224, 36, 26, .45), 0 0 0 18px rgba(255, 70, 40, 0); }
+}
+/* on the red "it's open" sky, the way in is gold so it can't be missed */
+.door.open {
+  font-size: clamp(1.35rem, 3vw, 1.7rem); padding: 1em 2.8em 1.05em;
+  color: #2a1000; text-shadow: 0 1px 0 rgba(255, 255, 255, .45);
+  background:
+    radial-gradient(120% 140% at 28% 0%, rgba(255, 255, 255, .6) 0%, rgba(255, 255, 255, 0) 45%),
+    linear-gradient(180deg, var(--gold-hi) 0%, var(--gold) 50%, #d9781a 100%);
+  animation: goldPulse 1.8s ease-out infinite;
+}
+.door.open:hover { box-shadow: 0 16px 40px rgba(255, 170, 40, .6); }
+@keyframes goldPulse {
+  0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 -5px 12px rgba(150, 60, 0, .45), 0 12px 30px rgba(0, 0, 0, .45), 0 0 0 0 rgba(255, 200, 90, .6); }
+  100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 -5px 12px rgba(150, 60, 0, .45), 0 12px 30px rgba(0, 0, 0, .45), 0 0 0 20px rgba(255, 200, 90, 0); }
+}
+html.arrived .whisper { font: 600 clamp(1rem, 2.2vw, 1.2rem)/1.4 var(--font-ui); letter-spacing: .01em; }
+.door.ghost { color: var(--ash); }
+.door.ghost:hover { color: var(--bone); }
+.door.play { font-size: 1.35rem; padding: 1em 2.4em 1.05em; }
+
+/* reward cards: big name, quest chip, a "choose" button that lights up */
+.reward { gap: .55rem; border: 2px solid rgba(239, 227, 198, .1); background: linear-gradient(180deg, #221c3d 0%, #0e0c1b 100%); }
+.reward:hover { border-color: rgba(255, 90, 60, .7); box-shadow: 0 26px 50px rgba(0, 0, 0, .65), 0 0 36px rgba(255, 50, 30, .3); }
+.reward.hot { border-color: rgba(255, 193, 77, .65); background: radial-gradient(90% 60% at 50% 30%, rgba(255, 193, 77, .14), transparent 70%), linear-gradient(180deg, #2a1f3a 0%, #0e0c1b 100%); }
+.r-art::before {
+  content: ""; position: absolute; width: 70%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 90, 50, .35), transparent 68%); filter: blur(6px);
+}
+.reward.hot .r-art::before { background: radial-gradient(circle, rgba(255, 193, 77, .38), transparent 68%); }
+.r-amt { font-weight: 800; font-size: 1.6rem; color: #fff7ea; text-shadow: 0 2px 0 rgba(0, 0, 0, .6); }
+.r-cost {
+  display: inline-flex; align-items: center; gap: .35em; padding: .38em .8em; border-radius: 999px;
+  font: 700 .9rem/1 var(--font-ui); color: #ffb3a1; background: rgba(224, 36, 26, .16); box-shadow: inset 0 0 0 1px rgba(255, 90, 60, .35);
+}
+.r-cost::before { content: "\2694"; font-size: 1em; }
+.r-pick {
+  margin-top: .35rem; padding: .6em 1.6em; border-radius: 999px; transform: translateZ(18px);
+  font: 800 1rem/1 var(--font-ui); letter-spacing: .04em; text-transform: uppercase; color: #fff;
+  background: rgba(255, 255, 255, .08); box-shadow: inset 0 0 0 1.5px rgba(239, 227, 198, .28);
+  transition: background .2s ease, box-shadow .2s ease;
+}
+.reward:hover .r-pick, .reward:focus-visible .r-pick {
+  background: linear-gradient(180deg, var(--cta-hi), var(--cta) 55%, var(--cta-lo)); box-shadow: 0 8px 22px rgba(224, 36, 26, .5);
+}
+.rewards { margin-top: .5rem; }
+.r-tag {
+  padding: .5em 1.05em; font: 800 .85rem/1 var(--font-ui); letter-spacing: .06em; text-transform: uppercase;
+  color: #2a1400; background: linear-gradient(180deg, var(--gold-hi), var(--gold)); box-shadow: 0 6px 18px rgba(255, 170, 40, .45);
+}
+
+/* quests: progress label, numbered offers, clear status buttons */
+.goo-bar { height: 50px; box-shadow: inset 0 0 0 1.5px rgba(255, 90, 60, .25), inset 0 4px 10px rgba(0, 0, 0, .6); }
+.goo-fill { box-shadow: 0 0 22px rgba(255, 40, 20, .55); }
+.goo-bar span { display: flex; align-items: center; justify-content: center; gap: .4em; font: 800 1.2rem/1 var(--font-ui); letter-spacing: .03em; }
+.goo-bar span::after { content: "quests done"; font-weight: 600; font-size: .85em; opacity: .8; }
+.offers { counter-reset: quest; }
+.offer { position: relative; border: 1.5px solid rgba(239, 227, 198, .12); background: linear-gradient(180deg, #17162e, #100f22); }
+.offer::before {
+  counter-increment: quest; content: counter(quest); flex: none;
+  display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%;
+  font: 800 1.1rem/1 var(--font-ui); color: #ff8a6e; background: rgba(224, 36, 26, .14); box-shadow: inset 0 0 0 1.5px rgba(255, 90, 60, .4);
+}
+.offer.done::before { content: "\2713"; color: #c9f7dc; background: rgba(20, 92, 56, .5); box-shadow: inset 0 0 0 1.5px rgba(110, 230, 160, .5); }
+.offer:hover, .offer:focus-visible { border-color: rgba(255, 90, 60, .65); box-shadow: 0 14px 30px rgba(0, 0, 0, .5), 0 0 26px rgba(255, 50, 30, .22); }
+.o-text b { font-size: 1.2rem; color: #fff7ea; }
+.o-text small { font-weight: 500; color: var(--ash); }
+.o-go {
+  padding: .75em 1.35em; font: 800 1rem/1 var(--font-ui); letter-spacing: .03em; text-transform: uppercase; color: #fff;
+  background: linear-gradient(180deg, var(--cta-hi), var(--cta) 55%, var(--cta-lo)); box-shadow: 0 8px 20px rgba(224, 36, 26, .4), inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+.offer.started .o-go { background: rgba(255, 255, 255, .08); box-shadow: inset 0 0 0 1.5px rgba(239, 227, 198, .3); text-transform: none; }
+
+/* unlocked: the reward sits in a slowly turning sunburst */
+#stepUnlocked .g-h { font-size: clamp(2.8rem, 8vw, 3.8rem);
+  background: linear-gradient(180deg, var(--gold-hi) 0%, var(--gold) 60%, #e07b1a 100%); -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .55)) drop-shadow(0 0 26px rgba(255, 180, 60, .45)); }
+.r-art.big::after {
+  content: ""; position: absolute; z-index: -1; width: 15rem; aspect-ratio: 1; border-radius: 50%;
+  background: repeating-conic-gradient(rgba(255, 193, 77, .22) 0 10deg, transparent 10deg 22deg);
+  -webkit-mask: radial-gradient(circle, #000 25%, transparent 70%); mask: radial-gradient(circle, #000 25%, transparent 70%);
+  animation: rays 14s linear infinite;
+}
+.r-art.big::before { width: 9rem; background: radial-gradient(circle, rgba(255, 193, 77, .45), transparent 70%); }
+@keyframes rays { to { transform: rotate(1turn); } }
+#stepUnlocked .who b { font: 800 2rem/1.1 var(--font-num); color: #fff7ea; }
+
+@media (max-width: 520px) {
+  .r-amt { font-size: 1.25rem; }
+  .r-pick { padding: .55em 1.1em; font-size: .9rem; }
+  .o-go { padding: .7em 1em; font-size: .9rem; }
+  .offer::before { width: 32px; height: 32px; font-size: 1rem; }
+  .pips i { width: 12px; }
+  .pips i.now { width: 20px; }
+  .goo-bar span::after { content: ""; }
+  /* keep the logo clear of the sound controls, and the card clear of the back / refresh buttons */
+  html.entered .stage { padding-top: 76px; padding-bottom: 84px; }
+  .vol { width: 84px; }
+}
+@media (prefers-reduced-motion: reduce) { .door.open, .door.play, #yesBtn, .r-art.big::after { animation: none; } }
+
 /* ---------- the arm ---------- */
 #reach { inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; }
 .rim, .ink, .shine, .drip, .crease { fill: none; stroke-linecap: round; }
@@ -718,7 +879,7 @@ html.entered .the { font-size: .85rem; }
     <div class="card">
       <svg class="tar" id="tar" aria-hidden="true" focusable="false"><g filter="url(#gooey)"><rect id="tarBase"></rect><g id="tarDrips"></g></g></svg>
       <span class="peek" aria-hidden="true"><i class="eye"></i><i class="eye"></i></span>
-      <div class="card-top"><span class="live"><i></i>The Hollow</span><span id="stepNo">Step 1 of 4</span></div>
+      <div class="card-top"><span class="live"><i></i>The Hollow</span><span class="steps"><span class="pips" id="pips" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span id="stepNo">Step 1 of 4</span></span></div>
       <form class="step" id="stepName" novalidate>
         <h2 class="g-h">Who&rsquo;s going in?</h2>
         <label class="g-lbl" for="username">Your Roblox username</label>
@@ -740,12 +901,14 @@ html.entered .the { font-size: .85rem; }
             <span class="r-art"><span class="r-bob"><img src="img/demon-fatality.png" alt=""></span></span>
             <span class="r-amt">Demon Fatality</span>
             <span class="r-cost">2 quests</span>
+            <span class="r-pick">choose</span>
           </button>
           <button class="reward hot" type="button" data-tier="2">
             <span class="r-tag">best value</span>
             <span class="r-art stack"><span class="r-bob"><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""></span></span>
             <span class="r-amt">3 Prism Boxes</span>
             <span class="r-cost">2 quests</span>
+            <span class="r-pick">choose</span>
           </button>
         </div>
         <p class="hint2">Delivered in-game to <span class="tagUser"></span> in break and steal a verity.</p>
@@ -1184,6 +1347,8 @@ html.entered .the { font-size: .85rem; }
   const step = (name) => {
     for (const k in steps) for (const el of steps[k]) el.hidden = k !== name;
     $('#stepNo').textContent = { name: 'Step 1 of 4', check: 'Step 2 of 4', reward: 'Step 3 of 4', quest: 'Step 4 of 4', unlocked: 'Unlocked' }[name];
+    const at = { name: 0, check: 1, reward: 2, quest: 3, unlocked: 4 }[name];
+    [...$('#pips').children].forEach((p, i) => { p.classList.toggle('done', i < at); p.classList.toggle('now', i === at); });
   };
   let found = null;
 
