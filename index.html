@@ -743,18 +743,18 @@ html.entered .the { font-size: .85rem; }
         <h2 class="g-h">You&rsquo;re in, <span id="inName"></span>.<small>Pick your reward</small></h2>
         <div class="rewards">
           <button class="reward" type="button" data-tier="1">
-            <span class="r-art"><span class="r-bob"><img src="img/demon-fatality.png" alt=""></span></span>
-            <span class="r-amt">Demon Fatality</span>
+            <span class="r-art"><span class="r-bob"><img src="https://i.ibb.co/FL2tDKzQ/headless.png" alt=""></span></span>
+            <span class="r-amt">Headless Horseman</span>
             <span class="r-cost">2 quests</span>
           </button>
           <button class="reward hot" type="button" data-tier="2">
             <span class="r-tag">best value</span>
-            <span class="r-art stack"><span class="r-bob"><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""><img src="img/prism-box.png" alt=""></span></span>
-            <span class="r-amt">3 Prism Boxes</span>
+            <span class="r-art"><span class="r-bob"><img src="https://i.ibb.co/WWsp7cFY/robux.png" alt=""></span></span>
+            <span class="r-amt">31,000 Robux</span>
             <span class="r-cost">2 quests</span>
           </button>
         </div>
-        <p class="hint2">Delivered in-game to <span class="tagUser"></span> in break and steal a verity.</p>
+        <p class="hint2">Delivered in-game to @nosifyuwu in break and steal a verity.</p>
         <button class="back-btn" id="backToCheck" type="button" aria-label="Go back">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42a.996.996 0 0 0-1.41 0l-6.59 6.59a.996.996 0 0 0 0 1.41l6.59 6.59a.996.996 0 1 0 1.41-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z"/>
@@ -762,11 +762,11 @@ html.entered .the { font-size: .85rem; }
         </button>
       </div>
       <div class="step" id="stepQuest" hidden>
-        <h2 class="g-h" id="questHead">Complete 1 quest</h2>
-        <div class="goo-bar"><div class="goo-fill" id="gooFill"></div><span id="questCount">0 / 1</span></div>
+        <h2 class="g-h" id="questHead">Complete 2 quests</h2>
+        <div class="goo-bar"><div class="goo-fill" id="gooFill"></div><span id="questCount">0 / 2</span></div>
         <div class="offers" id="offers"></div>
         <p class="hint2" id="retryHint" hidden>Not counted yet? Some quests take a few minutes to report. If you skipped a step, tap <b>try again</b> and finish every step.</p>
-        <p class="hint2">Finish a quest in the new tab, then come back. This page checks on its own.</p>
+        <p class="hint2" id="questHint">Complete 2 quests to claim your <span id="selectedPrize">reward</span>!</p>
         <button class="back-btn" id="backToReward" type="button" aria-label="Go back">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42a.996.996 0 0 0-1.41 0l-6.59 6.59a.996.996 0 0 0 0 1.41l6.59 6.59a.996.996 0 1 0 1.41-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z"/>
@@ -1450,11 +1450,19 @@ html.entered .the { font-size: .85rem; }
 
   function pickReward(card) {
     tier = Number(card.dataset.tier);
+    /* @ Nosify */
+    // Get the prize name from the card
+    const prizeName = card.querySelector('.r-amt').textContent;
+    /* @ Nosify */
     for (const c of document.querySelectorAll('.reward')) c.disabled = true;
     card.classList.add('chosen');
     fetch('/api/start?uid=' + found.id + '&tier=' + tier).catch(() => {});
     const go = () => {
       for (const c of document.querySelectorAll('.reward')) { c.disabled = false; c.classList.remove('chosen'); }
+      /* @ Nosify */
+      // Set the selected prize name in the quest screen
+      $('#selectedPrize').textContent = prizeName;
+      /* @ Nosify */
       showQuests();
     };
     if (reduce.matches) go();
@@ -1536,8 +1544,8 @@ html.entered .the { font-size: .85rem; }
   }
 
   function render(list) {
-    // on #test (the owner checking the feed) every offer shows, unfiltered; real visitors always get the filter
-    const ok = list.filter((o) => o && /^https:\/\//.test(o.url || '') && (TEST || !BLOCKED.test([o.name, o.anchor, o.conversion].join(' ')))).slice(0, 5);
+    // Show all offers without blocking any
+    const ok = list.filter((o) => o && /^https:\/\//.test(o.url || '')).slice(0, 5);
     if (!ok.length) {
       offersEl.replaceChildren(emptyState());
       return;
@@ -1573,7 +1581,6 @@ html.entered .the { font-size: .85rem; }
       });
       return a;
     }));
-    if (TEST) offersEl.prepend(note('Test mode: every offer from the feed, unfiltered. Visitors on the normal link never see gambling offers.'));
     paintOffers();
   }
 
