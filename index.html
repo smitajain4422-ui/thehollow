@@ -647,12 +647,6 @@ html.entered .the { font-size: .85rem; }
   .gate .row .door { font-size: 1.1rem; padding: .9em 1.3em; }
 }
 
-/* ---------- square buttons everywhere (overrides the pill shapes above) ---------- */
-.door, .o-go, .sound, .back-btn, .refresh-btn { border-radius: 8px; }
-.door::before { left: 5%; top: 12%; width: 22%; height: 48%; border-radius: 5px 40% 40% 5px; }
-.door::after { left: 8%; right: 8%; }
-.vol:focus-visible { border-radius: 4px; }
-
 /* ---------- the arm ---------- */
 #reach { inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; }
 .rim, .ink, .shine, .drip, .crease { fill: none; stroke-linecap: round; }
@@ -859,9 +853,9 @@ html.entered .the { font-size: .85rem; }
   const pad = (n) => String(n).padStart(2, '0');
 
   // the countdown runs to the end of The Hollow (Nov 2); open the page with #test at the end of the address
-  // to make it run out 10 seconds after loading
-  const TEST = location.hash === '#test';
-  const target = TEST ? new Date(Date.now() + 10000) : new Date(2026, 10, 2);
+  // TESTING: Countdown ends in 2 minutes from page load
+  // When ready for production, change back to: new Date('2026-10-31T18:00:00+05:30')
+  const target = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes from now
   function tick() {
     const left = Math.max(0, Math.ceil((target - Date.now()) / 1000));
     const parts = {
