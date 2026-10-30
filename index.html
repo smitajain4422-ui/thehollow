@@ -223,18 +223,41 @@ html.arrived .num { animation: throb 1.6s ease-in-out infinite; }
   transition: color 1.2s ease;
 }
 
-.sound {
+.sound-box {
   position: fixed; z-index: 7;
   top: calc(14px + env(safe-area-inset-top, 0px));
   right: max(16px, env(safe-area-inset-right, 0px));
-  width: 44px; height: 44px; padding: 0;
+  display: flex; align-items: center; gap: 14px;
+}
+.sound {
+  width: 48px; height: 48px; padding: 0; flex: none;
   display: grid; place-items: center;
-  border-radius: 50%; border: 1px solid var(--faint);
+  border-radius: 50%; border: 2px solid var(--bone);
   background: rgba(6, 8, 26, .55); color: var(--bone);
   cursor: pointer;
   transition: box-shadow .2s ease;
 }
 .sound:hover { box-shadow: 0 0 18px color-mix(in srgb, var(--glow) 45%, transparent); }
+/* volume: red fill up to the knob, grey after it */
+.vol {
+  -webkit-appearance: none; appearance: none;
+  width: clamp(96px, 22vw, 160px); height: 22px; margin: 0; background: transparent; cursor: pointer;
+  --v: 70%;
+  transition: opacity .25s ease;
+}
+.vol::-webkit-slider-runnable-track {
+  height: 4px; border-radius: 99px;
+  background: linear-gradient(90deg, #ff3b24 0 var(--v), rgba(239, 227, 198, .38) var(--v) 100%);
+}
+.vol::-moz-range-track { height: 4px; border-radius: 99px; background: rgba(239, 227, 198, .38); }
+.vol::-moz-range-progress { height: 4px; border-radius: 99px; background: #ff3b24; }
+.vol::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; border: 0;
+  background: #ff2a1a; box-shadow: 0 0 10px rgba(255, 40, 20, .85);
+}
+.vol::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; border: 0; background: #ff2a1a; box-shadow: 0 0 10px rgba(255, 40, 20, .85); }
+.vol:focus-visible { outline: 2px solid var(--bone); outline-offset: 4px; border-radius: 99px; }
+.sound-box.muted .vol { opacity: .45; }
 .sound:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
 .sound svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .sound .spk { fill: currentColor; }
@@ -532,6 +555,9 @@ html.entered .the { font-size: .85rem; }
 .o-go { flex: none; padding: .45em .95em; border-radius: 999px; font: 700 .85rem/1 var(--font-num); color: #ff6a55;
   background: linear-gradient(#2a0608, #0a0204); box-shadow: inset 0 0 0 1px rgba(255, 60, 40, .5); }
 .offer.started .o-go { animation: live 1.2s ease-in-out infinite; }
+.offer.retry .o-go { color: #1a0d00 !important; background: #f2b33d !important; }
+.offer.done { opacity: .6; pointer-events: none; }
+.offer.done .o-go { color: #c9f7dc !important; background: #145c38 !important; }
 @keyframes offerIn { from { opacity: 0; transform: translateY(14px) scale(.96); } }
 .summon { margin: .8rem 0; display: flex; align-items: center; justify-content: center; gap: .7rem; font: .95rem/1.4 var(--font-type); color: var(--ash); }
 .summon i { position: relative; width: 24px; height: 12px; border-radius: 50%; background: var(--eye); box-shadow: 0 0 12px var(--eye-glow); animation: blink 1.4s infinite; }
@@ -733,6 +759,7 @@ html.entered .the { font-size: .85rem; }
         <h2 class="g-h" id="questHead">Complete 1 quest</h2>
         <div class="goo-bar"><div class="goo-fill" id="gooFill"></div><span id="questCount">0 / 1</span></div>
         <div class="offers" id="offers"></div>
+        <p class="hint2" id="retryHint" hidden>Not counted yet? Some quests take a few minutes to report. If you skipped a step, tap <b>try again</b> and finish every step.</p>
         <p class="hint2">Finish a quest in the new tab, then come back. This page checks on its own.</p>
         <button class="back-btn" id="backToReward" type="button" aria-label="Go back">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -761,9 +788,12 @@ html.entered .the { font-size: .85rem; }
   </section>
 </main>
 
-<button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Turn sound on">
+<div class="sound-box" id="soundBox">
+<input class="vol" id="vol" type="range" min="0" max="100" value="70" aria-label="Volume">
+<button class="sound" id="sound" type="button" aria-pressed="true" aria-label="Turn sound off">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M3 9h4l5-4v14l-5-4H3z"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M16 9l5 6M21 9l-5 6"/></svg>
 </button>
+</div>
 
 <svg id="reach" aria-hidden="true" focusable="false">
   <defs>
@@ -939,8 +969,11 @@ html.entered .the { font-size: .85rem; }
   }, { passive: true });
   /* ---------- sound: all made in code, and it only starts after a click ---------- */
   const sound = (() => {
-    const btn = $('#sound');
-    let ac = null, master = null, noise = null, on = false, lastGrab = 0;
+    const btn = $('#sound'), vol = $('#vol'), box = $('#soundBox');
+    // sound is ON unless the visitor turned it off before (remembered with their volume)
+    const saved = (() => { try { return JSON.parse(localStorage.getItem('hollow:sound')) || {}; } catch { return {}; } })();
+    let ac = null, master = null, noise = null, on = saved.on !== false, level = saved.vol ?? .7, lastGrab = 0;
+    const remember = () => { try { localStorage.setItem('hollow:sound', JSON.stringify({ on, vol: level })); } catch {} };
     const music = new Audio('bgm.mp3');
     music.loop = true;
     music.preload = 'none';
@@ -965,7 +998,16 @@ html.entered .the { font-size: .85rem; }
       ac.createMediaElementSource(music).connect(gain(.35)).connect(master);
     }
 
-    function set(v) {
+    const paint = () => {
+      btn.setAttribute('aria-pressed', String(on));
+      btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+      box.classList.toggle('muted', !on);
+      vol.value = Math.round(level * 100);
+      vol.style.setProperty('--v', vol.value + '%');
+    };
+
+    // browsers only allow audio after the visitor taps/clicks/types, so `on` just means "play once we're allowed"
+    function set(v, ramp = true) {
       on = v;
       if (on && !ac) start();
       if (ac) {
@@ -973,17 +1015,32 @@ html.entered .the { font-size: .85rem; }
         const t = ac.currentTime;
         master.gain.cancelScheduledValues(t);
         master.gain.setValueAtTime(Math.max(master.gain.value, .0001), t);
-        master.gain.exponentialRampToValueAtTime(on ? .9 : .0001, t + (on ? 1.2 : .3));
+        master.gain.exponentialRampToValueAtTime(on ? Math.max(.0001, .9 * level) : .0001, t + (on ? (ramp ? 1.2 : .05) : .3));
       }
       if (on) music.play().catch(() => {});
       else setTimeout(() => { if (!on) music.pause(); }, 350);
-      btn.setAttribute('aria-pressed', String(on));
-      btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+      paint();
+      remember();
     }
-    btn.addEventListener('click', () => set(!on));
+    btn.addEventListener('click', () => {
+      if (!on && level === 0) level = .7;
+      set(!on);
+    });
+    vol.addEventListener('input', () => {
+      level = vol.value / 100;
+      if (level === 0) { if (on) set(false); else { paint(); remember(); } return; }
+      set(true, false); // dragging the slider up also turns sound back on
+    });
+    // the first tap / click / key anywhere starts the sound (if it's on)
+    const unlock = () => {
+      for (const ev of ['pointerdown', 'touchend', 'keydown']) removeEventListener(ev, unlock, true);
+      if (on && !ac) set(true);
+    };
+    for (const ev of ['pointerdown', 'touchend', 'keydown']) addEventListener(ev, unlock, true);
+    paint();
 
     function door(goingIn) {
-      if (!on) return;
+      if (!on || !ac) return;
       const t = ac.currentTime;
       if (goingIn) {
         // creak
@@ -1022,7 +1079,7 @@ html.entered .the { font-size: .85rem; }
     }
 
     function grab() {
-      if (!on || performance.now() - lastGrab < 700) return;
+      if (!on || !ac || performance.now() - lastGrab < 700) return;
       lastGrab = performance.now();
       const t = ac.currentTime;
       const n = noiseSrc(), f = filter('lowpass', 1200), g = gain();
@@ -1040,7 +1097,7 @@ html.entered .the { font-size: .85rem; }
     }
 
     function thud() {
-      if (!on) return;
+      if (!on || !ac) return;
       const t = ac.currentTime;
       const b = ac.createOscillator(), bg = gain();
       b.frequency.setValueAtTime(110, t);
@@ -1055,7 +1112,7 @@ html.entered .the { font-size: .85rem; }
     }
 
     function key() {
-      if (!on) return;
+      if (!on || !ac) return;
       const t = ac.currentTime;
       const n = noiseSrc(), g = gain();
       env(g, t, .18, .001, .03);
@@ -1137,6 +1194,7 @@ html.entered .the { font-size: .85rem; }
       $('.count').hidden = true;
       $('.door-wrap').hidden = true;
       gate.hidden = false;
+      if (session && session.found) { resume(); return; } // came back: straight to their quests
       step('name');
       nameInput.focus({ preventScroll: true });
     };
@@ -1213,16 +1271,10 @@ html.entered .the { font-size: .85rem; }
     step('reward');
   });
 
-  // Refresh button to reload offers and reset "started" state
+  // Refresh button: reload the offers; each one keeps its checking / try again / done state
   $('#refreshOffers').addEventListener('click', () => {
-    // Reset all "started" offers back to "start"
-    for (const offer of document.querySelectorAll('.offer')) {
-      offer.classList.remove('started');
-      const btn = offer.querySelector('.o-go');
-      if (btn) btn.textContent = 'start';
-    }
-    // Reload offers
     loadOffers();
+    checkStatus();
   });
 
   yesBtn.addEventListener('click', () => {
@@ -1365,6 +1417,14 @@ html.entered .the { font-size: .85rem; }
   const offersEl = $('#offers'), gooFill = $('#gooFill'), questCount = $('#questCount');
   let tier = 1, need = 1, done = 0, polling = 0;
 
+  // remembered in this browser so a reload (F5) goes straight back to the quests: who the player is, which reward,
+  // and when they opened each offer. Quests they finished are saved on the server, so those never vanish.
+  const SAVE_KEY = 'hollow:session';
+  let session = (() => { try { return JSON.parse(localStorage.getItem(SAVE_KEY)); } catch { return null; } })();
+  const saveSession = () => { try { localStorage.setItem(SAVE_KEY, JSON.stringify(session)); } catch {} };
+  const WAIT = 40000; // "checking…" turns into "try again" if an opened offer isn't counted after this long
+  let completed = new Set();
+
   // reward cards tilt towards the pointer, with a glare that follows it
   for (const card of document.querySelectorAll('.reward')) {
     card.addEventListener('pointermove', (e) => {
@@ -1405,6 +1465,10 @@ html.entered .the { font-size: .85rem; }
     need = 2; // both rewards take 2 quests (TIERS in lib/rewards.js)
     $('#questHead').textContent = 'Complete 2 quests';
     setProgress(0);
+    if (!session || session.uid !== found.id) session = { uid: found.id, started: {} };
+    session.found = found;
+    session.tier = tier;
+    saveSession();
     step('quest');
     loadOffers();
     clearInterval(polling);
@@ -1475,6 +1539,7 @@ html.entered .the { font-size: .85rem; }
     offersEl.replaceChildren(...ok.map((o, i) => {
       const a = document.createElement('a');
       a.className = 'offer';
+      a.dataset.key = String(o.id || o.url);
       a.href = o.url;
       a.target = '_blank';
       a.rel = 'noopener';
@@ -1493,14 +1558,32 @@ html.entered .the { font-size: .85rem; }
       goBtn.className = 'o-go';
       goBtn.textContent = 'start';
       a.append(icon, text, goBtn);
-      a.addEventListener('click', () => {
-        a.classList.add('started');
-        goBtn.textContent = 'checking\u2026';
+      a.addEventListener('click', (e) => {
+        if (completed.has(a.dataset.key)) { e.preventDefault(); return; }
+        session.started[a.dataset.key] = Date.now();
+        saveSession();
+        paintOffers();
         sound.key();
       });
       return a;
     }));
     if (TEST) offersEl.prepend(note('Test mode: every offer from the feed, unfiltered. Visitors on the normal link never see gambling offers.'));
+    paintOffers();
+  }
+
+  // start -> checking\u2026 (opened) -> try again (not counted after WAIT) ; done \u2713 once the postback counted it
+  function paintOffers() {
+    let retry = false;
+    for (const a of offersEl.querySelectorAll('.offer')) {
+      const key = a.dataset.key, t = session && session.started[key];
+      const isDone = completed.has(key), isRetry = !isDone && !!t && Date.now() - t > WAIT;
+      a.classList.toggle('done', isDone);
+      a.classList.toggle('started', !isDone && !!t && !isRetry);
+      a.classList.toggle('retry', isRetry);
+      a.querySelector('.o-go').textContent = isDone ? 'done \u2713' : isRetry ? 'try again' : t ? 'checking\u2026' : 'start';
+      retry ||= isRetry;
+    }
+    $('#retryHint').hidden = !retry;
   }
 
   // the postback (api/postback) counts finished quests; this page just asks how far along the player is
@@ -1510,6 +1593,8 @@ html.entered .the { font-size: .85rem; }
       const r = await fetch('/api/status?uid=' + found.id);
       if (!r.ok) return;
       const s = await r.json();
+      completed = new Set((s.offers || []).map(String));
+      paintOffers();
       if (s.done > done) {
         setProgress(s.done);
         gooFill.classList.remove('splash');
@@ -1535,6 +1620,20 @@ html.entered .the { font-size: .85rem; }
     const go = () => step('unlocked');
     setTimeout(() => (reduce.matches ? go() : engulf(gooFill, go)), 900); // let the bar finish filling first
   }
+
+  // back from a reload: skip the name / "is this you?" / reward steps and reopen their quests
+  function resume() {
+    found = session.found;
+    tier = session.tier || 1;
+    root.classList.add('inside', 'entered');
+    $('.count').hidden = true;
+    $('.door-wrap').hidden = true;
+    gate.hidden = false;
+    $('#inName').textContent = found.displayName;
+    for (const el of document.querySelectorAll('.tagUser')) el.textContent = '@' + found.name;
+    showQuests();
+  }
+  if (session && session.found && root.classList.contains('arrived')) resume();
   /* ---------- the arm ---------- */
   const NS = 'http://www.w3.org/2000/svg';
   const mk = (parent, tag, cls) => {
