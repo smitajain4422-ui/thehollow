@@ -992,7 +992,8 @@ html.entered .the { font-size: .85rem; }
     const remember = () => { try { localStorage.setItem('hollow:sound', JSON.stringify({ on, vol: level })); } catch {} };
     const music = new Audio('bgm.mp3');
     music.loop = true;
-    music.preload = 'none';
+    music.preload = 'auto'; // Preload the music
+    music.volume = 1;
     const env = (g, t, peak, a, d) => {
       g.gain.setValueAtTime(.0001, t);
       g.gain.exponentialRampToValueAtTime(peak, t + a);
@@ -1054,6 +1055,22 @@ html.entered .the { font-size: .85rem; }
       if (on && !ac) set(true);
     };
     for (const ev of ['pointerdown', 'touchend', 'keydown']) addEventListener(ev, unlock, true);
+    
+    // Try to start audio immediately on page load (works in some browsers)
+    if (on) {
+      // Attempt immediate autoplay
+      setTimeout(() => {
+        if (on && !ac) {
+          start();
+          ac.resume().catch(() => {});
+          music.play().catch(() => {});
+          const t = ac.currentTime;
+          master.gain.setValueAtTime(.0001, t);
+          master.gain.exponentialRampToValueAtTime(Math.max(.0001, .9 * level), t + 1.2);
+        }
+      }, 100);
+    }
+    
     paint();
 
     function door(goingIn) {
