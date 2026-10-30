@@ -1,4 +1,4 @@
-// GET /api/status?uid=ROBLOX_USER_ID -> { tier, done, need, ready, boxes }; the quest page asks this every few seconds
+// GET /api/status?uid=ROBLOX_USER_ID -> { tier, done, need, ready, rewards }; the quest page asks this every few seconds
 const { load, fresh, summary, send, params, validUser } = require('../lib/rewards');
 
 module.exports = async (req, res) => {

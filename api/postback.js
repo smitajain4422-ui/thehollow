@@ -32,12 +32,16 @@ module.exports = async (req, res) => {
     return text(res, 200, 'ignored: no player');
   }
 
-  // chargebacks / reversals don't hand out boxes
+  // chargebacks / reversals don't hand out rewards
   if (payout < 0 || ['0', '-1', 'reversed', 'rejected', 'chargeback'].includes(status)) return text(res, 200, 'ignored');
 
   try {
-    const id = tx || (offer && uid + ':' + offer);
-    if (id && !(await firstTime(id))) return text(res, 200, 'duplicate');
+    // a quest counts once: the same conversion (lead id) never twice, and the same offer only once per player,
+    // so 2 quests always means 2 different offers. Nothing to tell repeats apart by -> not counted at all.
+    const ids = [tx && 'lead:' + tx, offer && 'offer:' + uid + ':' + offer].filter(Boolean);
+    if (!ids.length) return text(res, 200, 'ignored: no lead or offer id');
+    const isNew = await Promise.all(ids.map(firstTime));
+    if (isNew.includes(false)) return text(res, 200, 'duplicate');
     const entry = (await load(uid)) || fresh();
     if (TIERS[tier]) entry.tier = tier;
     if (offer) entry.offers = [...entry.offers, offer].slice(-50);

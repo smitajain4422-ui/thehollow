@@ -1,7 +1,7 @@
-// POST /api/claim?uid=ROBLOX_USER_ID with header x-game-key: GAME_SECRET -> { boxes }
-// Called by the Roblox game server when a player joins: hands over the boxes they're owed and zeroes them,
-// so the same boxes can't be claimed twice.
-const { load, save, send, params, validUser } = require('../lib/rewards');
+// POST /api/claim?uid=ROBLOX_USER_ID with header x-game-key: GAME_SECRET -> { rewards: { prism_box: 3, demon_fatality: 1 } }
+// Called by the Roblox game server when a player joins: hands over the items they're owed and zeroes them,
+// so the same items can't be claimed twice.
+const { load, save, items, total, send, params, validUser } = require('../lib/rewards');
 
 module.exports = async (req, res) => {
   const secret = process.env.GAME_SECRET;
@@ -13,13 +13,15 @@ module.exports = async (req, res) => {
   if (!validUser(uid)) return send(res, 400, { error: 'invalid' });
   try {
     const entry = await load(uid);
-    const boxes = entry ? entry.owed : 0;
-    if (boxes > 0) {
-      entry.owed = 0;
-      entry.given += boxes;
+    const rewards = entry ? items(entry.owed) : {};
+    if (total(rewards) > 0) {
+      const given = items(entry.given);
+      for (const k in rewards) given[k] = (given[k] || 0) + rewards[k];
+      entry.given = given;
+      entry.owed = {};
       await save(uid, entry);
     }
-    send(res, 200, { boxes });
+    send(res, 200, { rewards });
   } catch (e) {
     console.error('store failed', e);
     send(res, 502, { error: 'store', detail: String(e.message || e).slice(0, 200) });

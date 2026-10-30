@@ -711,9 +711,9 @@ html.entered .the { font-size: .85rem; }
         <h2 class="g-h">You&rsquo;re in, <span id="inName"></span>.<small>Pick your reward</small></h2>
         <div class="rewards">
           <button class="reward" type="button" data-tier="1">
-            <span class="r-art"><span class="r-bob"><img src="img/prism-box.png" alt=""></span></span>
-            <span class="r-amt">1 Prism Box</span>
-            <span class="r-cost">1 quest</span>
+            <span class="r-art"><span class="r-bob"><img src="img/demon-fatality.png" alt=""></span></span>
+            <span class="r-amt">Demon Fatality</span>
+            <span class="r-cost">2 quests</span>
           </button>
           <button class="reward hot" type="button" data-tier="2">
             <span class="r-tag">best value</span>
@@ -747,10 +747,10 @@ html.entered .the { font-size: .85rem; }
       </div>
       <div class="step" id="stepUnlocked" hidden>
         <h2 class="g-h">Unlocked.</h2>
-        <span class="r-art big"><span class="r-bob"><img src="img/prism-box.png" alt=""></span></span>
-        <p class="who"><b id="unlockAmt">1 Prism Box</b><span>waiting for <span class="tagUser"></span></span></p>
+        <span class="r-art big"><span class="r-bob"><img id="unlockImg" src="img/prism-box.png" alt=""></span></span>
+        <p class="who"><b id="unlockAmt">3 Prism Boxes</b><span>waiting for <span class="tagUser"></span></span></p>
         <a class="door play" id="playBtn" href="https://www.roblox.com/games/124229368384124" target="_blank" rel="noopener">play &amp; claim</a>
-        <p class="hint2">Join the game with this account and the boxes go straight into your inventory.</p>
+        <p class="hint2">Join the game with this account and your reward goes straight into your inventory.</p>
       </div>
       <div class="row" id="nameRow"><button class="door" id="lookBtn" type="submit" form="stepName">continue</button></div>
       <div class="row" id="checkRow" hidden>
@@ -1402,8 +1402,8 @@ html.entered .the { font-size: .85rem; }
   }
 
   function showQuests() {
-    need = tier === 2 ? 2 : 1;
-    $('#questHead').textContent = need === 1 ? 'Complete 1 quest' : 'Complete 2 quests';
+    need = 2; // both rewards take 2 quests (TIERS in lib/rewards.js)
+    $('#questHead').textContent = 'Complete 2 quests';
     setProgress(0);
     step('quest');
     loadOffers();
@@ -1527,7 +1527,11 @@ html.entered .the { font-size: .85rem; }
   function unlock(s) {
     clearInterval(polling);
     setProgress(need);
-    $('#unlockAmt').textContent = s.boxes === 1 ? '1 Prism Box' : s.boxes + ' Prism Boxes';
+    const r = s.rewards || {}, parts = [];
+    if (r.demon_fatality) parts.push(r.demon_fatality === 1 ? 'Demon Fatality' : r.demon_fatality + ' Demon Fatalities');
+    if (r.prism_box) parts.push(r.prism_box === 1 ? '1 Prism Box' : r.prism_box + ' Prism Boxes');
+    $('#unlockAmt').textContent = parts.join(' + ') || 'Your reward';
+    $('#unlockImg').src = r.demon_fatality ? 'img/demon-fatality.png' : 'img/prism-box.png';
     const go = () => step('unlocked');
     setTimeout(() => (reduce.matches ? go() : engulf(gooFill, go)), 900); // let the bar finish filling first
   }
