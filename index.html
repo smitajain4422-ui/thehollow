@@ -874,7 +874,7 @@ html.entered .the { font-size: .85rem; }
       document.dispatchEvent(new Event('hollow:open'));
       return;
     }
-    const label = TEST ? 'until the test opens' : 'until November 2';
+    const label = 'until October 31 at 6:00 PM IST';
     if (untilEl.textContent !== label) untilEl.textContent = label;
     setTimeout(tick, 1000 - (Date.now() % 1000) + 8);
   }
