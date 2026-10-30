@@ -20,7 +20,8 @@ module.exports = async (req, res) => {
       await save(uid, entry);
     }
     send(res, 200, { boxes });
-  } catch {
-    send(res, 502, { error: 'store' });
+  } catch (e) {
+    console.error('store failed', e);
+    send(res, 502, { error: 'store', detail: String(e.message || e).slice(0, 200) });
   }
 };

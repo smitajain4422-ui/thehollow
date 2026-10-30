@@ -6,7 +6,8 @@ module.exports = async (req, res) => {
   if (!validUser(uid)) return send(res, 400, { error: 'invalid' });
   try {
     send(res, 200, summary((await load(uid)) || fresh()));
-  } catch {
-    send(res, 502, { error: 'store' });
+  } catch (e) {
+    console.error('store failed', e);
+    send(res, 502, { error: 'store', detail: String(e.message || e).slice(0, 200) });
   }
 };

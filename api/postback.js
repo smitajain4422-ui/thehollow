@@ -41,6 +41,6 @@ module.exports = async (req, res) => {
     text(res, 200, 'ok');
   } catch (e) {
     console.error('postback failed', e);
-    text(res, 502, 'store error'); // a non-200 makes most networks retry later
+    text(res, 502, 'store error: ' + String(e.message || e).slice(0, 200)); // a non-200 makes most networks retry later
   }
 };
