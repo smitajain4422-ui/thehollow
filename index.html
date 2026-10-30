@@ -870,9 +870,8 @@ html.entered .the { font-size: .85rem; }
   const untilEl = $('#until');
   const pad = (n) => String(n).padStart(2, '0');
 
-  // TESTING: Countdown ends in 10 seconds from page load
-  // Production: new Date('2026-10-31T18:00:00+05:30')
-  const target = new Date(Date.now() + 10000);
+  // Countdown ends October 31, 2026 at 6:00 PM IST (GMT+5:30)
+  const target = new Date('2026-10-31T18:00:00+05:30');
   function tick() {
     const left = Math.max(0, Math.ceil((target - Date.now()) / 1000));
     const parts = {
