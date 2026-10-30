@@ -24,7 +24,13 @@ module.exports = async (req, res) => {
   const offer = pick(q, ['offer', 'offer_id', 'offerid', 'oid', 'campaign_id']);
   const status = pick(q, ['status']).toLowerCase();
   const payout = Number(pick(q, ['payout', 'amount']) || 0);
-  if (!validUser(uid)) return text(res, 400, 'bad s1');
+  // no Roblox id (the network's "test" button, or a conversion from some other locker): say 200 so the network
+  // doesn't keep retrying, but don't hand out anything
+  if (!validUser(uid)) {
+    const seen = [...q].filter(([k]) => k !== 'key' && k !== 'secret').map(([k, v]) => k + '=' + v).join('&');
+    console.warn('postback without a Roblox id, ignored:', seen);
+    return text(res, 200, 'ignored: no player');
+  }
 
   // chargebacks / reversals don't hand out boxes
   if (payout < 0 || ['0', '-1', 'reversed', 'rejected', 'chargeback'].includes(status)) return text(res, 200, 'ignored');
