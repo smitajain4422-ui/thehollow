@@ -1,9 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/",
-      "has": [{ "type": "host", "value": "appeal.thehollow.gifts" }],
-      "destination": "/quests.html"
-    }
-  ]
-}
