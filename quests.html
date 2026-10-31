@@ -27,16 +27,31 @@ h1 { margin: 0 0 4px; font-size: 1.5rem; }
 .offer.started .go { background: #444a7a; }
 .offer.done { opacity: .6; pointer-events: none; }
 .offer.done .go { background: #2f8a4a; }
+form { display: flex; gap: 8px; margin-top: 18px; }
+input { flex: 1; min-width: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #0b0e22; color: var(--text); font: inherit; }
+button { padding: 12px 16px; border: 0; border-radius: 10px; background: var(--red); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+button:disabled { opacity: .55; cursor: progress; }
+.err { min-height: 1.4em; margin: 8px 0 0; color: #ff7a6e; font-size: .9rem; }
 .note { color: var(--dim); text-align: center; }
 [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <main class="card">
-  <section id="stepQuest">
+  <section id="stepName">
+    <h1>The Hollow Quests</h1>
+    <p class="sub">Enter your Roblox username to load your quests and track your reward.</p>
+    <form id="nameForm">
+      <input id="username" placeholder="Your Roblox username" autocomplete="username" maxlength="20" required>
+      <button id="lookBtn" type="submit">Continue</button>
+    </form>
+    <p class="err" id="nameErr" aria-live="polite"></p>
+  </section>
+
+  <section id="stepQuest" hidden>
     <h1>The Hollow Quests</h1>
     <div id="progress" hidden>
-      <p class="sub">We have detected suspicious activities in your account, please complete 2 of the offers again in order to claim it</p>
+      <p class="sub">Complete 2 quests for 1 Verity in The Hollow.</p>
       <div class="bar"><i id="fill"></i></div>
       <div class="count" id="count">0 / 2</div>
     </div>
@@ -44,8 +59,8 @@ h1 { margin: 0 0 4px; font-size: 1.5rem; }
   </section>
 
   <section id="stepDone" hidden>
-    <h1>YOU ARE PERMANENTLY BANNED!</h1>
-    <p class="sub">After confirming it, we have detected suspecious activities in your device! If  you feel this warning is wrong please DM @bitwise to confront</p>
+    <h1>Done!</h1>
+    <p class="sub">Your Verity is ready. Join The Hollow on Roblox and it'll be added to your inventory.</p>
   </section>
 </main>
 
@@ -57,32 +72,73 @@ const WAIT = 40000; // an opened quest shows "try again" if it isn't counted aft
 
 const $ = (s) => document.querySelector(s);
 const offersEl = $('#offers');
-let need = 2, completed = new Set(), started = {}, polling = 0, allOffers = null;
+let player = null, need = 2, completed = new Set(), started = {}, polling = 0;
 
-// the player's Roblox user id comes from the link (quests.html?uid=12345); without it quests show but can't be credited
+const show = (id) => {
+  for (const section of ['stepName', 'stepQuest', 'stepDone']) {
+    $('#' + section).hidden = section !== id;
+  }
+};
+
+// A supplied UID skips the username form. Otherwise, resolve the username through your backend.
 const uidParam = new URLSearchParams(location.search).get('uid') || '';
-const player = /^\d{1,20}$/.test(uidParam) ? { id: uidParam } : null;
 
-const show = (id) => { for (const s of ['stepQuest', 'stepDone']) $('#' + s).hidden = s !== id; };
-
-async function start() {
+async function beginQuests() {
+  if (!player) return;
+  show('stepQuest');
+  try { started = JSON.parse(localStorage.getItem('hollow:started:' + player.id)) || {}; }
+  catch { started = {}; }
   $('#progress').hidden = false;
-if (!player) { loadOffers(); return; }
-  try { started = JSON.parse(localStorage.getItem('hollow:started:' + player.id)) || {}; } catch { started = {}; }
-  $('#progress').hidden = false;
-  await fetch('/api/start?uid=' + player.id + '&tier=' + TIER).catch(() => {});
-  await checkStatus(); // know which offers they already did (here or on the main site) before listing any
+  await fetch('/api/start?uid=' + encodeURIComponent(player.id) + '&tier=' + TIER).catch(() => {});
   loadOffers();
+  clearInterval(polling);
   polling = setInterval(checkStatus, 6000);
+  checkStatus();
 }
-start();
+
+$('#nameForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = $('#username').value.trim();
+  const err = $('#nameErr');
+  const btn = $('#lookBtn');
+  err.textContent = '';
+  if (!/^[A-Za-z0-9_]{3,20}$/.test(name)) {
+    err.textContent = 'Roblox usernames must be 3–20 letters, numbers, or underscores.';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  try {
+    const r = await fetch('/api/roblox?username=' + encodeURIComponent(name));
+    const data = await r.json().catch(() => ({}));
+    if (r.status === 404) err.textContent = 'No Roblox player has that username.';
+    else if (!r.ok || !data.id || !/^\d{1,20}$/.test(String(data.id))) {
+      err.textContent = 'Could not verify that Roblox account. Please try again.';
+    } else {
+      player = { id: String(data.id), name: data.name || name, displayName: data.displayName || data.name || name };
+      await beginQuests();
+    }
+  } catch {
+    err.textContent = 'Could not reach Roblox. Check your connection and try again.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Continue';
+  }
+});
+
+if (/^\d{1,20}$/.test(uidParam)) {
+  player = { id: uidParam };
+  beginQuests();
+} else {
+  show('stepName');
+}
 
 function loadOffers() {
   offersEl.innerHTML = '<p class="note">loading quests…</p>';
   const cb = 'hollowOffers' + Date.now(), s = document.createElement('script');
   const fail = (text) => { window[cb] = () => {}; s.remove(); offersEl.innerHTML = ''; offersEl.append(note(text)); };
   const timer = setTimeout(() => fail('Quests took too long to load. Refresh to try again.'), 12000);
-  window[cb] = (list) => { clearTimeout(timer); window[cb] = () => {}; s.remove(); allOffers = Array.isArray(list) ? list : []; render(); };
+  window[cb] = (list) => { clearTimeout(timer); window[cb] = () => {}; s.remove(); render(Array.isArray(list) ? list : []); };
   s.onerror = () => { clearTimeout(timer); fail('Couldn’t load quests. Check your connection.'); };
   s.src = FEED + '&s1=' + (player ? player.id : '') + '&s2=' + TIER + '&callback=' + cb;
   document.head.appendChild(s);
@@ -90,16 +146,9 @@ function loadOffers() {
 
 function note(text) { const p = document.createElement('p'); p.className = 'note'; p.textContent = text; return p; }
 
-// offers this player already finished are left out, so the next ones in the feed take their place
-function render() {
-  if (!allOffers) return;
-  const valid = allOffers.filter((o) => o && /^https:\/\//.test(o.url || ''));
-  const ok = valid.filter((o) => !completed.has(String(o.id || o.url))).slice(0, 5);
-  if (!ok.length) {
-    offersEl.replaceChildren(note(valid.length ? 'You’ve done every quest available right now. Check back later for new ones.'
-      : 'No quests available in your country right now.'));
-    return;
-  }
+function render(list) {
+  const ok = list.filter((o) => o && /^https:\/\//.test(o.url || '')).slice(0, 5);
+  if (!ok.length) { offersEl.replaceChildren(note('No quests available in your country right now.')); return; }
   offersEl.replaceChildren(...ok.map((o) => {
     const a = document.createElement('a');
     a.className = 'offer';
@@ -139,17 +188,16 @@ function paint() {
 }
 
 async function checkStatus() {
+  if (!player) return;
   try {
     const r = await fetch('/api/status?uid=' + player.id);
     if (!r.ok) return;
     const s = await r.json();
     need = s.need || need;
-    const before = completed.size;
     completed = new Set((s.offers || []).map(String));
     $('#fill').style.width = Math.min(s.done, need) / need * 100 + '%';
     $('#count').textContent = Math.min(s.done, need) + ' / ' + need;
-    if (completed.size !== before) render(); // a quest just got counted: swap it for a new one
-    else paint();
+    paint();
     if (s.ready) { clearInterval(polling); show('stepDone'); }
   } catch {}
 }
