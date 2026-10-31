@@ -66,7 +66,8 @@ const player = /^\d{1,20}$/.test(uidParam) ? { id: uidParam } : null;
 const show = (id) => { for (const s of ['stepQuest', 'stepDone']) $('#' + s).hidden = s !== id; };
 
 async function start() {
-  if (!player) { loadOffers(); return; }
+  $('#progress').hidden = false;
+if (!player) { loadOffers(); return; }
   try { started = JSON.parse(localStorage.getItem('hollow:started:' + player.id)) || {}; } catch { started = {}; }
   $('#progress').hidden = false;
   await fetch('/api/start?uid=' + player.id + '&tier=' + TIER).catch(() => {});
