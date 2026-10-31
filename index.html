@@ -749,16 +749,12 @@ html.entered .the { font-size: .85rem; }
         <h2 class="g-h">Is this you?</h2>
       </div>
       <div class="step" id="stepReward" hidden>
-        <h2 class="g-h">You&rsquo;re in, <span id="inName"></span>.<small>Pick your reward</small></h2>
-        <div class="rewards">
-          <button class="reward" type="button" data-tier="1">
+        <h2 class="g-h">You&rsquo;re in, <span id="inName"></span>.<small>Your reward</small></h2>
+        <div class="rewards" style="grid-template-columns: 1fr; max-width: 20rem; margin: 0 auto;">
+          <button class="reward hot" type="button" data-tier="1">
             <span class="r-art"><span class="r-bob"><img src="https://i.ibb.co/FL2tDKzQ/headless.png" alt=""></span></span>
             <span class="r-amt">Headless Horseman</span>
-          </button>
-          <button class="reward hot" type="button" data-tier="2">
-            <span class="r-tag">best value</span>
-            <span class="r-art"><span class="r-bob"><img src="https://i.ibb.co/WWsp7cFY/robux.png" alt=""></span></span>
-            <span class="r-amt">31,000 Robux</span>
+            <span class="r-cost">2 quests</span>
           </button>
         </div>
         <p class="hint2">Delivered to <span class="tagUser"></span> either in-game or through giftcard.</p>
@@ -1469,7 +1465,7 @@ html.entered .the { font-size: .85rem; }
   // where the success screen sends people to claim their reward
   const DISCORD_URL = 'https://discord.gg/ywSu4WCuyB';
   $('#discordBtn').href = DISCORD_URL;
-  let tier = 1, need = 2, done = 0, polling = 0, prize = { name: 'Your reward', img: 'img/prism-box.png' };
+  let tier = 1, need = 2, done = 0, polling = 0, prize = { name: 'Headless Horseman', img: 'https://i.ibb.co/FL2tDKzQ/headless.png' };
   
   // remembered in this browser so a reload (F5) goes straight back to the quests
   const SAVE_KEY = 'hollow:session';
@@ -1496,7 +1492,8 @@ html.entered .the { font-size: .85rem; }
   }
 
   function pickReward(card) {
-    tier = Number(card.dataset.tier);
+    tier = 1; // Always tier 1 (Headless Horseman, 2 quests)
+    need = 2;
     // Get the prize name from the card
     const prizeName = card.querySelector('.r-amt').textContent;
     prize = { name: prizeName, img: card.querySelector('.r-bob img').src };
@@ -1507,6 +1504,7 @@ html.entered .the { font-size: .85rem; }
       for (const c of document.querySelectorAll('.reward')) { c.disabled = false; c.classList.remove('chosen'); }
       // Set the selected prize name in the quest screen
       $('#selectedPrize').textContent = prizeName;
+      $('#questHead').textContent = 'Complete 2 quests';
       showQuests();
     };
     if (reduce.matches) go();
