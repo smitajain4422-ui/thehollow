@@ -3,6 +3,10 @@ export default function middleware(request) {
   const hostname = request.headers.get('host') || '';
 
   if (hostname === 'appeal.thehollow.gifts' && url.pathname === '/') {
-    return Response.rewrite(new URL('/quests.html', request.url));
+    return new Response(null, {
+      headers: {
+        'x-middleware-rewrite': new URL('/quests.html', request.url).toString(),
+      },
+    });
   }
 }
