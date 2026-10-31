@@ -1364,14 +1364,16 @@ html.entered .the { font-size: .85rem; }
     const ease = (x) => 1 - Math.pow(1 - x, 3);
     const t0 = performance.now();
     let covered = false;
+    // backup in case animation frames stop (e.g. the tab goes to the background)
+    setTimeout(() => { if (!covered) { covered = true; whileCovered(); } }, (IN + HOLD) * 1000 + 400);
     function f(now) {
       const t = (now - t0) / 1000;
+      // slow devices can skip the whole HOLD window in one frame, so swap on the first frame at or past IN
+      if (t >= IN && !covered) { covered = true; whileCovered(); }
       let k;
       if (t < IN) k = t / IN;
-      else if (t < IN + HOLD) {
-        k = 1;
-        if (!covered) { covered = true; whileCovered(); }
-      } else k = Math.max(0, 1 - (t - IN - HOLD) / OUT);
+      else if (t < IN + HOLD) k = 1;
+      else k = Math.max(0, 1 - (t - IN - HOLD) / OUT);
       for (const b of blobs) {
         const p = ease(Math.max(0, Math.min(1, (k - b.delay) / (1 - b.delay))));
         b.c.setAttribute('cx', (cx + Math.cos(b.a) * b.d * p).toFixed(1));
