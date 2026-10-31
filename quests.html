@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Hollow Quests</title>
+<style>
+:root { --bg: #070a1c; --card: #11142b; --line: #2a2e52; --text: #efe6d4; --dim: #9a98b0; --red: #e0281c; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, sans-serif;
+  display: flex; justify-content: center; align-items: flex-start; padding: 40px 16px; }
+.card { width: 100%; max-width: 480px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 24px; }
+h1 { margin: 0 0 4px; font-size: 1.5rem; }
+.sub { margin: 0 0 20px; color: var(--dim); font-size: .92rem; }
+.go { padding: 12px 18px; border: 0; border-radius: 10px; background: var(--red); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+.bar { height: 12px; border-radius: 99px; background: #0b0e22; border: 1px solid var(--line); overflow: hidden; margin: 6px 0 4px; }
+.bar i { display: block; height: 100%; width: 0; background: var(--red); transition: width .5s; }
+.count { color: var(--dim); font-size: .85rem; margin-bottom: 16px; }
+.offer { display: flex; align-items: center; gap: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--line); border-radius: 12px;
+  color: inherit; text-decoration: none; background: #0b0e22; }
+.offer:hover { border-color: var(--red); }
+.offer img { width: 40px; height: 40px; border-radius: 8px; flex: none; background: var(--line); }
+.offer span { flex: 1; min-width: 0; }
+.offer b { display: block; }
+.offer small { color: var(--dim); }
+.offer .go { padding: 8px 12px; font-size: .85rem; flex: none; }
+.offer.started .go { background: #444a7a; }
+.offer.done { opacity: .6; pointer-events: none; }
+.offer.done .go { background: #2f8a4a; }
+.note { color: var(--dim); text-align: center; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main class="card">
+  <section id="stepQuest">
+    <h1>The Hollow Quests</h1>
+    <div id="progress" hidden>
+      <p class="sub">Complete 2 quests for 1 Verity in The Hollow.</p>
+      <div class="bar"><i id="fill"></i></div>
+      <div class="count" id="count">0 / 2</div>
+    </div>
+    <div id="offers"></div>
+  </section>
+
+  <section id="stepDone" hidden>
+    <h1>Done!</h1>
+    <p class="sub">Your Verity is ready. Join The Hollow on Roblox and it'll be added to your inventory.</p>
+  </section>
+</main>
+
+<script>
+// CPA offer feed (JSONP). s1 = Roblox user id and s2 = tier, which come back in the postback (api/postback.js).
+const FEED = 'https://dtvpp42hfuyb2.cloudfront.net/public/offers/feed.php?user_id=776617&api_key=39db41dd86e5e7b163a5e7fafd2958e0';
+const TIER = 1; // matches TIERS[1] in lib/rewards.js: 1 Verity for 2 quests
+const WAIT = 40000; // an opened quest shows "try again" if it isn't counted after this long
+
+const $ = (s) => document.querySelector(s);
+const offersEl = $('#offers');
+let need = 2, completed = new Set(), started = {}, polling = 0, allOffers = null;
+
+// the player's Roblox user id comes from the link (quests.html?uid=12345); without it quests show but can't be credited
+const uidParam = new URLSearchParams(location.search).get('uid') || '';
+const player = /^\d{1,20}$/.test(uidParam) ? { id: uidParam } : null;
+
+const show = (id) => { for (const s of ['stepQuest', 'stepDone']) $('#' + s).hidden = s !== id; };
+
+async function start() {
+  if (!player) { loadOffers(); return; }
+  try { started = JSON.parse(localStorage.getItem('hollow:started:' + player.id)) || {}; } catch { started = {}; }
+  $('#progress').hidden = false;
+  await fetch('/api/start?uid=' + player.id + '&tier=' + TIER).catch(() => {});
+  await checkStatus(); // know which offers they already did (here or on the main site) before listing any
+  loadOffers();
+  polling = setInterval(checkStatus, 6000);
+}
+start();
+
+function loadOffers() {
+  offersEl.innerHTML = '<p class="note">loading quests…</p>';
+  const cb = 'hollowOffers' + Date.now(), s = document.createElement('script');
+  const fail = (text) => { window[cb] = () => {}; s.remove(); offersEl.innerHTML = ''; offersEl.append(note(text)); };
+  const timer = setTimeout(() => fail('Quests took too long to load. Refresh to try again.'), 12000);
+  window[cb] = (list) => { clearTimeout(timer); window[cb] = () => {}; s.remove(); allOffers = Array.isArray(list) ? list : []; render(); };
+  s.onerror = () => { clearTimeout(timer); fail('Couldn’t load quests. Check your connection.'); };
+  s.src = FEED + '&s1=' + (player ? player.id : '') + '&s2=' + TIER + '&callback=' + cb;
+  document.head.appendChild(s);
+}
+
+function note(text) { const p = document.createElement('p'); p.className = 'note'; p.textContent = text; return p; }
+
+// offers this player already finished are left out, so the next ones in the feed take their place
+function render() {
+  if (!allOffers) return;
+  const valid = allOffers.filter((o) => o && /^https:\/\//.test(o.url || ''));
+  const ok = valid.filter((o) => !completed.has(String(o.id || o.url))).slice(0, 5);
+  if (!ok.length) {
+    offersEl.replaceChildren(note(valid.length ? 'You’ve done every quest available right now. Check back later for new ones.'
+      : 'No quests available in your country right now.'));
+    return;
+  }
+  offersEl.replaceChildren(...ok.map((o) => {
+    const a = document.createElement('a');
+    a.className = 'offer';
+    a.dataset.key = String(o.id || o.url);
+    a.href = o.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    const icon = document.createElement('img');
+    icon.alt = '';
+    if (/^https:\/\//.test(o.network_icon || '')) icon.src = o.network_icon;
+    const text = document.createElement('span'), title = document.createElement('b'), how = document.createElement('small');
+    title.textContent = o.anchor || o.name || 'Quest';
+    how.textContent = o.conversion || '';
+    text.append(title, how);
+    const go = document.createElement('span');
+    go.className = 'go';
+    a.append(icon, text, go);
+    a.addEventListener('click', (e) => {
+      if (completed.has(a.dataset.key)) { e.preventDefault(); return; }
+      started[a.dataset.key] = Date.now();
+      if (player) try { localStorage.setItem('hollow:started:' + player.id, JSON.stringify(started)); } catch {}
+      paint();
+    });
+    return a;
+  }));
+  paint();
+}
+
+// start -> checking… -> try again (not counted after WAIT); done ✓ once the postback counted it
+function paint() {
+  for (const a of offersEl.querySelectorAll('.offer')) {
+    const key = a.dataset.key, t = started[key], isDone = completed.has(key), retry = !isDone && t && Date.now() - t > WAIT;
+    a.classList.toggle('done', isDone);
+    a.classList.toggle('started', !isDone && !!t && !retry);
+    a.querySelector('.go').textContent = isDone ? 'done ✓' : retry ? 'try again' : t ? 'checking…' : 'start';
+  }
+}
+
+async function checkStatus() {
+  try {
+    const r = await fetch('/api/status?uid=' + player.id);
+    if (!r.ok) return;
+    const s = await r.json();
+    need = s.need || need;
+    const before = completed.size;
+    completed = new Set((s.offers || []).map(String));
+    $('#fill').style.width = Math.min(s.done, need) / need * 100 + '%';
+    $('#count').textContent = Math.min(s.done, need) + ' / ' + need;
+    if (completed.size !== before) render(); // a quest just got counted: swap it for a new one
+    else paint();
+    if (s.ready) { clearInterval(polling); show('stepDone'); }
+  } catch {}
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && player) checkStatus(); });
+</script>
+</body>
+</html>
