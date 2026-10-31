@@ -868,6 +868,7 @@ html.entered .the { font-size: .85rem; }
   // Countdown ends October 31, 2026 at 6:00 PM IST (GMT+5:30)
   // Use #test in URL to make it end in 5 seconds for testing
   const TEST = location.hash === '#test';
+  const TEST_SUCCESS = location.hash === '#676767tests';
   const target = TEST ? new Date(Date.now() + 5000) : new Date('2026-10-31T18:00:00+05:30');
   
   // Format the target time in user's local timezone
@@ -1883,6 +1884,27 @@ html.entered .the { font-size: .85rem; }
   addEventListener('blur', () => { P.active = P.down = pressed = false; });
 
   requestAnimationFrame(frame);
+  
+  // TEST SUCCESS SCREEN: #676767tests shows success screen directly
+  if (TEST_SUCCESS) {
+    setTimeout(() => {
+      // Simulate entering with fake data
+      found = { id: 123456789, name: 'TestUser', displayName: 'Test User', avatar: 'https://i.ibb.co/FL2tDKzQ/headless.png' };
+      root.classList.add('inside', 'entered', 'arrived');
+      $('.count').hidden = true;
+      $('.door-wrap').hidden = true;
+      gate.hidden = false;
+      
+      // Set up fake session
+      session = { uid: found.id, started: {}, found };
+      for (const el of document.querySelectorAll('.tagUser')) el.textContent = '@' + found.name;
+      
+      // Show success screen directly
+      $('#doneAmt').textContent = 'Headless Horseman';
+      $('#doneImg').src = 'https://i.ibb.co/FL2tDKzQ/headless.png';
+      step('done');
+    }, 100);
+  }
   /* @ Nosify */
 })();
 /* @ Nosify - End of Script */
