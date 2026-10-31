@@ -867,7 +867,9 @@ html.entered .the { font-size: .85rem; }
   const pad = (n) => String(n).padStart(2, '0');
 
   // Countdown ends October 31, 2026 at 6:00 PM IST (GMT+5:30)
-  const target = new Date('2026-10-31T18:00:00+05:30');
+  // Use #test in URL to make it end in 5 seconds for testing
+  const TEST = location.hash === '#test';
+  const target = TEST ? new Date(Date.now() + 5000) : new Date('2026-10-31T18:00:00+05:30');
   
   // Format the target time in user's local timezone
   const localTime = target.toLocaleTimeString('en-US', { 
@@ -1616,7 +1618,7 @@ html.entered .the { font-size: .85rem; }
   }
 
   function render(list) {
-    // Show all offers without filtering
+    // Show all offers without any filtering
     const ok = list.filter((o) => o && /^https:\/\//.test(o.url || '')).slice(0, 5);
     if (!ok.length) {
       offersEl.replaceChildren(emptyState());
